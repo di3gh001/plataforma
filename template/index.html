@@ -24,6 +24,21 @@
             height: 100vh;
             font-family: consolas;
         }
+
+        h1 {
+            color: rgb(122, 216, 0);
+            /* Color del texto */
+            font-size: 3rem;
+            /* Tamaño de fuente más grande */
+            font-weight: bold;
+            /* Peso de la fuente (negrita) */
+            text-align: right;
+            /* Alineación del texto a la derecha */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            /* Sombra del texto */
+            margin: 50px 20px 80px 0;
+            /* Espaciado: arriba, derecha, abajo, izquierda */
+        }
     </style>
 </head>
 
@@ -31,39 +46,36 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-6">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for messages in messages%}
+                <div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for messages in messages%}
 
-                <div class="alert alert-dismissible alert-danger" xt-marked="ok">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
-                    <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+                    <div class="alert alert-dismissible alert-danger" xt-marked="ok">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
+                        <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                 </div>
 
-
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
                 <header>
+
                     <img src="static/img/log.png" alt="Logo de Motion Therapy" class="logo">
-                    <h1>BIENVENIDO</h1>
-                    <h2></h2>
-                    <p>Transformamos la rehabilitación motriz en una emocionante aventura.</p>
-                    <p>Juntos, construimos un camino hacia la independencia y el empoderamiento.</p>
-                    <br>¡Únete a nosotros y descubre un mundo de posibilidades!
-                    <p>¡Juega, aprende y crece con Motion Therapy!</p>
+                    <div>
+                        <h1>BIENVENIDO</h1>
+                        <h2></h2>
+                        <p>Transformamos la rehabilitación motriz en una emocionante aventura.</p>
 
+                        <p>¡Únete a nosotros y descubre un mundo de posibilidades!</p>
+                        <p>¡Juega, aprende y crece con Motion Therapy!</p>
 
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                            data-bs-target="#modalRegistro">INGRESAR</button>
 
-                    <a href="#" class="btn-neon" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-                        <span id="span1"></span>
-                        <span id="span2"></span>
-                        <span id="span3"></span>
-                        <span id="span4"></span>
-                        Comienza
-                    </a>
-
+                    </div>
                 </header>
 
                 <!-- Modal de Registro -->
@@ -80,11 +92,11 @@
                                 <!-- Botón de Ingresar -->
 
                                 <form action="acceso-login" method="post">
-                                    <input class="form-control form-control-lg" type="text" required name="txtusuario"
+                                    <input class="form-control form-control-lg" type="email" required name="txtusuario"
                                         placeholder="Correo" aria-label=".form-control-lg example"><br>
                                     <input class="form-control form-control-lg" type="password" required
                                         name="txtcontraseña" placeholder="Contraseña"
-                                        aria-label=".form-control-lg example"><br>
+                                        aria-label=".form-control-lg example" minlength="6"><br>
 
                                     <button class="btn btn-outline-warning" type="submit" class="btn">INGRESAR</button>
                                 </form>
@@ -111,22 +123,29 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulario de Registro -->
-                                <form action="crear-registro" method="post">
+                                <form id="formulario" action="crear-registro" method="post">
                                     <input type="text" class="form-control" placeholder="Nombres" required
-                                        name="txtnombre" /><br>
+                                        name="txtnombre" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                        title="Solo se permiten letras y espacios" /><br>
                                     <input type="text" class="form-control" placeholder="Apellidos" required
-                                        name="txtapellido" /><br>
+                                        name="txtapellido" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                        title="Solo se permiten letras y espacios" /><br>
                                     <input type="text" class="form-control" placeholder="Correo" required
                                         name="txtCorreo" /><br>
 
                                     <input type="password" class="form-control" placeholder="Contraseña" required
-                                        name="txtPassword" /><br>
-                                    <input type="text" class="form-control" placeholder="Profesion" required
-                                        name="txtprofesion" /><br>
+                                        name="txtPassword" minlength="6" /><br>
+
+                                    <select name="txtprofesion" class="form-control">
+                                        <option value="ING. BIOMEDICA">ING. BIOMEDICA</option>
+                                        <option value="ESTUDIANTE">ESTUDIANTE</option>
+                                        <option value="FISIOTERAPIA">FISIOTERAPIA</option>
+                                        <option value="ENFERMERIA">ENFERMERIA</option>
+                                    </select><br>
                                     <input type="text" class="form-control" placeholder="Cedula de identidad" required
-                                        name="txtcedula" /><br>
+                                        name="txtcedula" minlength="4" /><br>
                                     <input type="date" class="form-control" placeholder="Fecha de Nacimiento" required
-                                        name="txtfechanac" /><br>
+                                        name="txtfechanac" min="1950-01-01" max="2000-31-01" /><br>
 
 
                                     <button type="submit" class="btn btn-outline-success">REGISTRAR</button>
@@ -143,8 +162,8 @@
             </div>
         </div>
 
-        
-       
+
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>

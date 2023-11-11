@@ -15,7 +15,8 @@ export class Fin {
             this.finboton.setFrame(1);
         });
         this.finboton.on('pointerdown', () => {
-            window.location.href = `/puntos3?tiempo=${JSON.stringify(tiempoultimo)}`;
+            const textoAdicional = "DERECHA";
+            window.location.href = `/puntos3?tiempo=${JSON.stringify(tiempoultimo)}&texto=${encodeURIComponent(textoAdicional)}`;
         });
     }
 }

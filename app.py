@@ -10,10 +10,17 @@ app = Flask(__name__, template_folder='template')
 app.secret_key = "diego"
 
 # Configuración de la base de datos MySQL
-app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'Di3gh003'
-app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
-app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
+# app.config['MYSQL_USER'] = 'Di3gh003'
+# app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
+# app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# mysql = MySQL(app)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
@@ -88,16 +95,28 @@ def crear_registro():
     cedula = request.form['txtcedula']
     profesion = request.form['txtprofesion']
 
-    # Conexión a la base de datos y ejecución de la inserción
+    # Conexión a la base de datos y ejecución de la verificación
     cur = mysql.connection.cursor()
+
+    # Verificar si el correo ya está registrado
+    cur.execute("SELECT * FROM usuarios WHERE usuario = %s", (correo,))
+    usuario_existente = cur.fetchone()
+
+    if usuario_existente:
+        # Si el correo ya está registrado, mostrar mensaje de error
+        flash('Correo electrónico ya registrado. Por favor, utiliza otro correo.')
+        return render_template("index.html", mensaje2="Correo electrónico ya registrado. Por favor, utiliza otro correo")
+
+    # Si el correo no está registrado, realizar la inserción
     cur.execute(
         "INSERT INTO usuarios (usuario, contraseña, nombre, apellido, fechanac, cedula, profesion, id_rol) VALUES (%s, %s, %s, %s, %s, %s, %s, '2')",
         (correo, password, nombre, apellido, fechanac, cedula, profesion))
     mysql.connection.commit()
 
     # Mostrar mensaje de éxito
-    flash('Contacto Agregado Exitosamente')
-    return render_template("index.html", mensaje2="Usuario Registrado Exitosamente")
+    flash('Usuario registrado exitosamente')
+    return render_template("index.html", mensaje2="Usuario registrado exitosamente")
+
 
 # ------------------------------------------ADMIN---------------------------------------------------------
 
@@ -577,6 +596,7 @@ def derecha1():
         return render_template('derecha1.html')
     return render_template('index.html')
 
+
 @app.route('/izquierda2', methods=["POST", "GET"])
 def izquierda2():
     if 'logueado' in session:
@@ -585,11 +605,27 @@ def izquierda2():
     return render_template('index.html')
 
 
+@app.route('/izquierda3', methods=["POST", "GET"])
+def izquierda3():
+    if 'logueado' in session:
+
+        return render_template('izquierda3.html')
+    return render_template('index.html')
+
+
 @app.route('/derecha2', methods=["POST", "GET"])
 def derecha2():
     if 'logueado' in session:
 
         return render_template('derecha2.html')
+    return render_template('index.html')
+
+
+@app.route('/derecha3', methods=["POST", "GET"])
+def derecha3():
+    if 'logueado' in session:
+
+        return render_template('derecha3.html')
     return render_template('index.html')
 
 
@@ -631,7 +667,7 @@ def puntos2():
     segundos = tiempo_json['segundos']
     texto_adicional = request.args.get('texto')
 
-    return render_template('puntos2.html', minutos=minutos, segundos=segundos,texto_adicional=texto_adicional)
+    return render_template('puntos2.html', minutos=minutos, segundos=segundos, texto_adicional=texto_adicional)
 
 
 @app.route('/puntos3', methods=['POST', 'GET'])
@@ -640,8 +676,8 @@ def puntos3():
     tiempo_json = json.loads(tiempo_str)
     minutos = tiempo_json['minutos']
     segundos = tiempo_json['segundos']
-
-    return render_template('puntos3.html', minutos=minutos, segundos=segundos)
+    texto_adicional = request.args.get('texto')
+    return render_template('puntos3.html', minutos=minutos, segundos=segundos, texto_adicional=texto_adicional)
 
 
 @app.route('/enviarpuntos', methods=['POST', 'GET'])
@@ -657,7 +693,7 @@ def enviarpuntos():
 
     # El paciente no existe, entonces se agrega a la base de datos
     sql = "INSERT INTO tratamiento (nivel, hora,mano, id_paciente) VALUES ( %s,%s, %s, %s )"
-    data = (nivel, puntos,mano, pacienteid)
+    data = (nivel, puntos, mano, pacienteid)
     cur.execute(sql, data)
     mysql.connection.commit()
     flash('tiempo agregado')
@@ -691,13 +727,13 @@ def enviarpuntos3():
     puntos = request.form['txtpuntos']
     pacienteid = session['id_paciente']
     nivel = request.form['txtnivel']
-
+    mano = request.form['txtmano']
     # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
     cur = mysql.connection.cursor()
 
     # El paciente no existe, entonces se agrega a la base de datos
-    sql = "INSERT INTO tratamiento3 (nivel, hora, id_paciente) VALUES ( %s,%s, %s )"
-    data = (nivel, puntos, pacienteid)
+    sql = "INSERT INTO tratamiento3 (nivel, hora, mano,id_paciente) VALUES ( %s,%s, %s,%s )"
+    data = (nivel, puntos, mano, pacienteid)
     cur.execute(sql, data)
     mysql.connection.commit()
     flash('tiempo agregado')

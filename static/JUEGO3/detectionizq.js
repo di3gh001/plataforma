@@ -72,7 +72,7 @@ export class Detection {
 
     onResults(results) {
         if (results.multiHandLandmarks && results.multiHandedness) {
-            const rightHandIndex = results.multiHandedness.findIndex(hand => hand.label === 'Right');
+            const rightHandIndex = results.multiHandedness.findIndex(hand => hand.label === 'Left');
 
             if (rightHandIndex !== -1) {
                 const rightHandLandmarks = results.multiHandLandmarks[rightHandIndex];

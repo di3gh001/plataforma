@@ -1,3 +1,14 @@
+.logo {
+    max-width: 20%;
+    height: 40%;
+    /* Cambiado de 200px a 100% para adaptarse al ancho del contenedor */
+
+    /* Agregado para limitar el tamaño máximo */
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
 .fondo-emp {
     max-width: 20%;
     /* Ajusta el tamaño máximo de la imagen */
@@ -33,30 +44,6 @@ body {
     height: 100vh;
     background: #ac0cdd;
     font-family: consolas;
-}
-
-
-.btn-neon {
-    position: relative;
-    display: inline-block;
-    padding: 15px 30px;
-    color: #140c0c;
-    letter-spacing: 4px;
-    text-decoration: none;
-    font-size: 24px;
-    overflow: hidden;
-    transition: 0.2s;
-}
-
-.btn-neon:hover {
-    background: #90f600;
-    box-shadow: 0 0 10px #96b217, 0 0 40px #006539, 0 0 80px #0192e6;
-    transition-delay: 1s;
-}
-
-.btn-neon span {
-    position: absolute;
-    display: block;
 }
 
 #span1 {
@@ -126,15 +113,7 @@ body {
     font-family: consolas;
 }
 
-.logo {
-    width: 100%;
-    /* Cambiado de 200px a 100% para adaptarse al ancho del contenedor */
-    max-width: 200px;
-    /* Agregado para limitar el tamaño máximo */
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
+
 
 .container {
     background-color: #767676;
@@ -144,18 +123,25 @@ body {
     top: 0;
     left: 0;
 }
-
-header h1 {
-    margin-top: 250px;
-    margin-bottom: 20px;
-    left: 500px;
-    right: 20px;
-    font-size: 1.7rem;
-    transform: translateY(-50%)
-}
-
 header p {
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 1.5rem;
+}
+
+@media screen and (max-width: 575px) {
+
+    /* Reglas de CSS para pantallas pequeñas */
+    .header-container {
+        flex-direction: column;
+        /* Cambia la dirección a columna en pantallas pequeñas */
+        align-items: flex-start;
+        /* Ajusta la alineación en pantallas pequeñas */
+    }
+
+    header h1 {
+        margin-left: 0;
+        /* Elimina el margen entre la imagen y el título en pantallas pequeñas */
+        font-size: 1.2rem;
+    }
 }
