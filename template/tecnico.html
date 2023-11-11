@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERVICIO TECNICO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .contenido {
+            display: none;
+        }
+
+        .activo {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar bg-body-tertiary">
+
+        <div class="container-fluid">
+            <a class="navbar-brand">SOPORTE TECNICO, {{session['nombre']}} {{session['apellido']}}</a>
+
+
+        </div>
+    </nav>
+
+    <ul class="nav nav-tabs">
+
+
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#" onclick="mostrarContenido('contenido1')">INICIO</a>
+
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#" onclick="mostrarContenido('contenido0')">LISTA DE
+                OPERADORES</a>
+
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="mostrarContenido('contenido2')">LISTA DE PACIENTES</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">TRATAMIENTOS</a>
+        </li>
+        <li>
+
+        </li>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="ESCRIBE AQUI LO QUE BUSCAS" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">BUSCAR OPERADOR</button>
+        </form>
+        <a class="dropdown-item menuperfil cerrar" href="/logout">
+            <i class="btn btn-outline-danger">Salir<i class="bi bi-box-arrow-right"></i></i>
+        </a>
+
+    </ul>
+
+    <div id="contenido0" class="contenido">
+
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de Usuarios</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Correo Electrónico</th>
+                        <th>Contraseña</th>
+                        <th>Cedula de Identidad</th>
+                        <th>Profesion</th>
+                        <th>Fecha de nacimiento</th>
+                        <th>
+                            Operaciones
+                        </th>
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for operador in operadores %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ operador.nombre }}</td>
+                        <td>{{ operador.apellido }}</td>
+                        <td>{{ operador.usuario }}</td>
+                        <td>{{ operador.contraseña }}</td>
+                        <td>{{ operador.cedula }}</td>
+                        <td>{{ operador.profesion }}</td>
+                        <td>{{ operador.fechanac }}</td>
+                        <td>
+
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#modaleditar{{ operador.id }}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <div class="modal fade" id="modaleditar{{ operador.id }}" tabindex="-1"
+                                aria-labelledby="modaleditar{{ operador.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modaleditar">
+                                                Registro Pacientes
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Botón de Ingresar -->
+
+                                            <form action="updatetec/{{operador.id}}" method="post">
+                                                <p>Nombres</p>
+                                                <input type="text" class="form-control" placeholder="nombre"
+                                                    name="txtnombreop" value="{{ operador.nombre }}" /><br>
+                                                <p>Apellidos</p>
+                                                <input type="text" class="form-control" placeholder="Apellidos"
+                                                    name="txtapellidoop" value="{{ operador.apellido }}" /><br>
+                                                <p>Correo Electronico</p>
+                                                <input type="text" class="form-control" placeholder="Correo Electronico"
+                                                    name="txcorreoop" value="{{ operador.usuario }}" /><br>
+                                                <p>Contraseña</p>
+                                                <input type="text" class="form-control" placeholder="Contraseña"
+                                                    name="txtcontraseñaop" value="{{ operador.contraseña }}" /><br>
+                                                <p>Cedula de Identidad</p>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Cedula de identidad" name="txtcedulaop"
+                                                    value="{{ operador.cedula }}" /><br>
+                                                <p>Profesion</p>
+                                                <input type="text" class="form-control" placeholder="Profesion"
+                                                    name="txtprofesionop" value="{{ operador.profesion }}" /><br>
+                                                <p>Fecha de Nacimiento</p>
+                                                <input type="date" class="form-control" placeholder="Fecha"
+                                                    name="txtfechanacop" value="{{ operador.fechanac }}" /><br>
+
+
+                                                <button type="submit" class="btn btn-outline-success">EDITAR</button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/borraroperadortec/{{operador.id}}" class="btn btn-danger btn-delete"><i
+                                    class="bi bi-trash"></i></a>
+                        </td>
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div id="contenido1" class="contenido activo">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li class="flash-message">
+                {{ message }}
+                <button class="close-button" onclick="cerrarMensaje(this)">X</button>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <nav class="navbar bg-body-tertiary">
+
+            <form class="container-fluid justify-content-start">
+                <li class="nav-item">
+
+                    <button class="btn btn-outline-success me-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#modaltecnico"><i class="bi bi-person-circle"></i><br>PERFIL DEL
+                        TECNICO</button>
+                    <br>
+                    <br><br>
+
+                    <div class="modal fade" id="modaltecnico" tabindex="-1" aria-labelledby="modaltecnico"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modaltecnico">
+                                        PERFIL DE OPERADOR
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Botón de Ingresar -->
+
+                                    <form>
+                                        <p>Nombres</p>
+                                        <input type="text" class="form-control" placeholder="nombre" name="txtnombreop"
+                                            value="{{session['nombre']}}" readonly /><br>
+                                        <p>Apellidos</p>
+                                        <input type="text" class="form-control" placeholder="Apellidos"
+                                            name="txtapellidoop" value="{{session['apellido']}}" readonly /><br>
+                                        <p>Correo Electronico</p>
+                                        <input type="text" class="form-control" placeholder="Correo Electronico"
+                                            name="txcorreoop" value="{{session['correo']}}" readonly /><br>
+
+                                        <p>Cedula de Identidad</p>
+                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                            name="txtcedulaop" value="{{session['cedula']}}" readonly /><br>
+                                        <p>Profesion</p>
+                                        <input type="text" class="form-control" placeholder="Profesion"
+                                            name="txtprofesionop" value="{{session['profesion']}}" readonly /><br>
+                                        <p>Fecha de Nacimiento</p>
+                                        <input type="text" class="form-control" placeholder="Fecha" name="txtfechanacop"
+                                            value="{{session['fechanac']}}" readonly /><br>
+                                        <p>Telefono</p>
+                                        <input type="text" class="form-control" placeholder="Telf" name="txttelefono"
+                                            value="{{session['telefono']}}" readonly /><br>
+
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalingreso">
+                        <i class="bi bi-person-add"></i><br>Agregar Operador
+                    </button>
+
+
+                    <!-- Modal de Registro -->
+                    <div class="modal fade" id="modalingreso" tabindex="-1" aria-labelledby="modalingresoLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalingresoLabel">Registro</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Botón de Ingresar -->
+
+                                    <form action="crear-registro" method="post">
+                                        <input type="text" class="form-control" placeholder="Nombres" required
+                                            name="txtnombre" /><br>
+                                        <input type="text" class="form-control" placeholder="Apellidos" required
+                                            name="txtapellido" /><br>
+                                        <input type="text" class="form-control" placeholder="Correo" required
+                                            name="txtCorreo" /><br>
+
+                                        <input type="password" class="form-control" placeholder="Contraseña" required
+                                            name="txtPassword" /><br>
+                                        <input type="text" class="form-control" placeholder="Profesion" required
+                                            name="txtprofesion" /><br>
+                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                            required name="txtcedula" /><br>
+                                        <input type="date" class="form-control" placeholder="Fecha de Nacimiento"
+                                            required name="txtfechanac" /><br>
+
+
+                                        <button type="submit" class="btn btn-outline-success">REGISTRAR</button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#modalagregarpac"><i class="bi bi-person-plus"></i><br>
+                        AGREGAR PACIENTE
+                    </button>
+                    <div class="modal fade" id="modalagregarpac" tabindex="-1" aria-labelledby="modaleditar"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalagregarpac">
+                                        Registro Pacientes
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Botón de Ingresar -->
+
+                                    <form action="/agregarpactec" method="post">
+                                        <input type="text" class="form-control" placeholder="Nombres"
+                                            name="txtnombrepactec" />
+                                        <br>
+
+                                        <input type="text" class="form-control" placeholder="Apellidos"
+                                            name="txtapellidopactec" /><br>
+
+                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                            name="txtcedulapactec" />
+
+                                        <p>Fecha de Nacimiento</p>
+                                        <input type="date" class="form-control" placeholder="Fecha"
+                                            name="txtfechanacpactec" /><br>
+                                        <label for="operador">OPERADOR:</label>
+                                        <select id="operador" name="operador" required>
+                                            {% for operador in operadores %}
+                                            <option value="{{ operador.id }}">{{ operador.nombre }}</option>
+                                            {% endfor %}
+                                        </select><br>
+                                        <button type="submit" class="btn btn-outline-success">AGREGAR PACIENTE</button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </form>
+        </nav>
+    </div>
+    <div id="contenido2" class="contenido">
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de pacientes</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Cedula de Identidad</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Operaciones </th>
+                       
+                       
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ paciente.nombres }}</td>
+                        <td>{{ paciente.apellidos }}</td>
+                        <td>{{ paciente.cedulapac }}</td>
+                        <td>{{ paciente.fechanacpc }}</td>
+                        <td>
+
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#modaleditar{{ paciente.id_paciente }}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <div class="modal fade" id="modaleditar{{ paciente.id_paciente }}" tabindex="-1"
+                                aria-labelledby="modaleditar{{ paciente.id_paciente }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modaleditar">
+                                                Registro Pacientes
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Botón de Ingresar -->
+
+                                            <form action="updatepactec/{{paciente.id_paciente}}" method="post">
+                                                <p>Nombres</p>
+                                                <input type="text" class="form-control" placeholder="nombre"
+                                                    name="txtnombrepac" value="{{ paciente.nombres }}" /><br>
+                                                <p>Apellidos</p>
+                                                <input type="text" class="form-control" placeholder="Apellidos"
+                                                    name="txtapellidopac" value="{{ paciente.apellidos }}" /><br>
+
+                                                <p>Cedula de Identidad</p>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Cedula de identidad" name="txtcedulapac"
+                                                    value="{{ paciente.cedulapac }}" /><br>
+
+                                                <p>Fecha de Nacimiento</p>
+                                                <input type="date" class="form-control" placeholder="Fecha"
+                                                    name="txtfechanacpac" value="{{ paciente.fechanacpc }}" /><br>
+
+
+                                                <button type="submit" class="btn btn-outline-success">EDITAR</button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/borraroperador/{{paciente.id_paciente}}" class="btn btn-danger btn-delete"><i
+                                    class="bi bi-trash"></i></a>
+                        </td>
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="contenido3" class="contenido">
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de pacientes</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>NIVEL</th>
+                        <th>HORA</th>
+
+                        <th>
+                            Operaciones
+                        </th>
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tratamientos in tratamiento %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ tratamientos.nivel }}</td>
+                        <td>{{ tratamientos.hora }}</td>
+
+                        <td>
+
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#modaleditar{{ tratamientos.id_tratamiento }}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <div class="modal fade" id="modaleditar{{ tratamientos.id_tratamiento }}" tabindex="-1"
+                                aria-labelledby="modaleditar{{ tratamientos.id_tratamiento }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modaleditar">
+                                                Registro Pacientes
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Botón de Ingresar -->
+
+                                            <form action="updatepactec/{{tratamientos.id_tratamiento}}" method="post">
+                                                <p>Nombres</p>
+                                                <input type="text" class="form-control" placeholder="nombre"
+                                                    name="txtnombrepac" value="{{ tratamientos.nivel }}" /><br>
+                                                <p>Apellidos</p>
+                                                <input type="text" class="form-control" placeholder="Apellidos"
+                                                    name="txtapellidopac" value="{{ tratamientos.hora }}" /><br>
+
+
+
+                                                <button type="submit" class="btn btn-outline-success">EDITAR</button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/borraroperador/{{tratamientos.id_tratamiento}}"
+                                class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></a>
+                        </td>
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename= 'js/listar.js')}}"></script>
+
+    <script>
+        function mostrarContenido(idContenido) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.contenido').forEach(function (contenido) {
+                contenido.classList.remove('activo');
+            });
+
+            // Mostrar el contenido correspondiente al botón clickeado
+            document.getElementById(idContenido).classList.add('activo');
+        }
+        function cerrarMensaje(button) {
+            button.parentElement.style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>

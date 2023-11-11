@@ -1,0 +1,9 @@
+.container{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100hv;
+    background-color: aqua;
+    color: black;
+    text-align: center;
+}

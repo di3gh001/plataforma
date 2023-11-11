@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Punto</title>
+</head>
+
+<body>
+    <h1>puntos JUEGO 1</h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for messages in messages%}
+
+    <div class="alert alert-dismissible alert-danger" xt-marked="ok">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
+        <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+    </div>
+
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form action="/enviarpuntos" method="post">
+        <p>PUNTOS</p>
+        <input type="text" class="form-control" placeholder="TIEMPO" name="txtpuntos"
+            value="{{ minutos }}:{{ segundos }} " /><br>
+        <input type="text" class="form-control" placeholder="MANO EJERCITADA" name="txtmano"
+            value="{{ texto_adicional }}" /><br>
+
+        <select name="txtnivel" class="form-control">
+            <option value="AVANZADO">AVANZADO</option>
+            <option value="MEDIO">MEDIO</option>
+            <option value="LEVE">LEVE</option>
+        </select><br>
+
+
+
+        <button type="submit" class="btn btn-outline-success">enviar</button>
+
+    </form>
+</body>
+
+</html>

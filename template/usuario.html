@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>USUARIO</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+    <div class="cabeza">
+        <header>
+
+            <h1>Bienvenido, {{session['nombre']}}</h1>
+
+
+
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modaleditar">
+                        PERFIL <br> DE OPERADOR
+                    </button>
+                    <div class="modal fade" id="modaleditar" tabindex="-1" aria-labelledby="modaleditar"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modaleditar">
+                                        PERFIL DE OPERADOR
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Botón de Ingresar -->
+
+                                    <form>
+                                        <p>Nombres</p>
+                                        <input type="text" class="form-control" placeholder="nombre" name="txtnombreop"
+                                            value="{{session['nombre']}}" readonly /><br>
+                                        <p>Apellidos</p>
+                                        <input type="text" class="form-control" placeholder="Apellidos"
+                                            name="txtapellidoop" value="{{session['apellido']}}" readonly /><br>
+                                        <p>Correo Electronico</p>
+                                        <input type="text" class="form-control" placeholder="Correo Electronico"
+                                            name="txcorreoop" value="{{session['correo']}}" readonly /><br>
+
+                                        <p>Cedula de Identidad</p>
+                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                            name="txtcedulaop" value="{{session['cedula']}}" readonly /><br>
+                                        <p>Profesion</p>
+                                        <input type="text" class="form-control" placeholder="Profesion"
+                                            name="txtprofesionop" value="{{session['profesion']}}" readonly /><br>
+                                        <p>Fecha de Nacimiento</p>
+                                        <input type="date" class="form-control" placeholder="Fecha" name="txtfechanacop"
+                                            value="{{session['fechanac']}}" readonly /><br>
+
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalagregar">
+                        AGREGAR PACIENTE
+                    </button>
+                    <div class="modal fade" id="modalagregar" tabindex="-1" aria-labelledby="modaleditar"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalagregar">
+                                        Registro Pacientes
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Botón de Ingresar -->
+
+                                    <form action="/agregarpac" method="post">
+                                        <input type="text" class="form-control" placeholder="Nombres"
+                                            name="txtnombrepac" />
+                                        <br>
+
+                                        <input type="text" class="form-control" placeholder="Apellidos"
+                                            name="txtapellidopac" /><br>
+
+                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                            name="txtcedulapac" />
+
+                                        <p>Fecha de Nacimiento</p>
+                                        <input type="date" class="form-control" placeholder="Fecha"
+                                            name="txtfechanacpac" /><br>
+                                        <button type="submit" class="btn btn-outline-success">AGREGAR PACIENTE</button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <form class="d-flex" role="search" action="/accesopac" method="post">
+                        <input type="text" class="form-control" placeholder="Cedula de identidad" name="txtcedulapac" />
+                        <button class="btn btn-outline-success" type="submit">BUSCAR PACIENTE</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class=" cerrar" href="/logout">
+                        Salir
+                    </a>
+                </li>
+            </ul>
+        </header>
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de pacientes</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Correo Electrónico</th>
+                        <th>Contraseña</th>
+                        <th>Cedula de Identidad</th>
+                        <th>Profesion</th>
+                        <th>Fecha de nacimiento</th>
+
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes %}
+                    <tr data-id="{{ paciente.cedulapac }}">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ paciente.nombres }}</td>
+                        <td>{{ paciente.apellidos }}</td>
+                        <td>{{ paciente.cedulapac }}</td>
+                        <td>{{ paciente.fechanacpc }}</td>
+
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+ 
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-bVUxdIeZP4ZmXO6FHzHG5wF/BJnA3kEAlV2JfZ+K5C6heqJwXJgvR6d88Mz02M9Q"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha384-uUo3yF7RKL4Ct2S7Elny2y4EmlnOMc5lAElZBOAM4ltdaL+m5ZHpZa6mXO8JlU1M"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

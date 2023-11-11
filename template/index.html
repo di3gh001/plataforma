@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,100&family=Share+Tech&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #808080;
+            /* Código de color para gris */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: consolas;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for messages in messages%}
+
+                <div class="alert alert-dismissible alert-danger" xt-marked="ok">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
+                    <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+                </div>
+
+
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <header>
+                    <img src="static/img/log.png" alt="Logo de Motion Therapy" class="logo">
+                    <h1>BIENVENIDO</h1>
+                    <h2></h2>
+                    <p>Transformamos la rehabilitación motriz en una emocionante aventura.</p>
+                    <p>Juntos, construimos un camino hacia la independencia y el empoderamiento.</p>
+                    <br>¡Únete a nosotros y descubre un mundo de posibilidades!
+                    <p>¡Juega, aprende y crece con Motion Therapy!</p>
+
+
+
+                    <a href="#" class="btn-neon" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                        <span id="span1"></span>
+                        <span id="span2"></span>
+                        <span id="span3"></span>
+                        <span id="span4"></span>
+                        Comienza
+                    </a>
+
+                </header>
+
+                <!-- Modal de Registro -->
+                <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalRegistroLabel">ACCESO</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Botón de Ingresar -->
+
+                                <form action="acceso-login" method="post">
+                                    <input class="form-control form-control-lg" type="text" required name="txtusuario"
+                                        placeholder="Correo" aria-label=".form-control-lg example"><br>
+                                    <input class="form-control form-control-lg" type="password" required
+                                        name="txtcontraseña" placeholder="Contraseña"
+                                        aria-label=".form-control-lg example"><br>
+
+                                    <button class="btn btn-outline-warning" type="submit" class="btn">INGRESAR</button>
+                                </form>
+                                <!-- Botón de Registrar -->
+                                <button type="button" class="btn btn-outline-warning" class="btn" data-bs-toggle="modal"
+                                    data-bs-target="#modalRegistrarForm">
+                                    Registrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal de Registro (Formulario) -->
+                <div class="modal fade" id="modalRegistrarForm" tabindex="-1" aria-labelledby="modalRegistrarFormLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalRegistrarFormLabel">Registro</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Formulario de Registro -->
+                                <form action="crear-registro" method="post">
+                                    <input type="text" class="form-control" placeholder="Nombres" required
+                                        name="txtnombre" /><br>
+                                    <input type="text" class="form-control" placeholder="Apellidos" required
+                                        name="txtapellido" /><br>
+                                    <input type="text" class="form-control" placeholder="Correo" required
+                                        name="txtCorreo" /><br>
+
+                                    <input type="password" class="form-control" placeholder="Contraseña" required
+                                        name="txtPassword" /><br>
+                                    <input type="text" class="form-control" placeholder="Profesion" required
+                                        name="txtprofesion" /><br>
+                                    <input type="text" class="form-control" placeholder="Cedula de identidad" required
+                                        name="txtcedula" /><br>
+                                    <input type="date" class="form-control" placeholder="Fecha de Nacimiento" required
+                                        name="txtfechanac" /><br>
+
+
+                                    <button type="submit" class="btn btn-outline-success">REGISTRAR</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                    <img class="fondo-emp img-fluid" src="static/img/mancha.png" alt="">
+                    <img class="emp img-fluid" src="static/img/niñojuego.png" alt="">
+                </div>
+            </div>
+        </div>
+
+        
+       
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+
+</body>
+
+</html>

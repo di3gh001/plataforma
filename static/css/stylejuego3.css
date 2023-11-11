@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header, main, footer {
+    text-align: center;
+}
+
+input, button {
+    font-size: 1em;
+    margin: 5px;
+}
+
+button {
+    padding: 5px 10px;
+}
+
+#result {
+    font-weight: bold;
+    color: green;
+}
