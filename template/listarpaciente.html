@@ -12,26 +12,33 @@
 
 </head>
 
-<body onload="mostrarInicio()">
+<body>
 
     <div class="container-fluid">
         <div class="row justify-content-center align-content-center">
             <div class="col-8 barra">
                 <h4 class="text-light">BIENVENIDO</h4>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading">{{ message }}</h4>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
             </div>
             <div class="col-4 text-right barra">
                 <ul class="navbar-nav mr-auto">
-                    <li>
-                        <a href="#" class="px-3 text-light perfil dropdown-toggle" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                class="fas fa-user-circle user"></i></a>
-
-                        <div class="dropdown-menu" aria-labelledby="navbar-dropdown">
-                            <a class="dropdown-item menuperfil cerrar" href="/logout">
-                                <i class="fas fa-sign-out-alt m-1"></i>Salir
-                            </a>
-                        </div>
-                    </li>
+                    <div class="col-4 text-right barra">
+                        <ul class="navbar-nav mr-auto">
+                            <li>
+                                <a class="dropdown-item menuperfil cerrar" href="/logout">
+                                    <i class="fas fa-sign-out-alt m-1"></i>Salir
+                            </li>
+                        </ul>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -52,130 +59,126 @@
 
             <main class="main col">
                 <div class="row justify-content-center align-content-center text-center">
-                    <div class="columna col-lg-6">
-                        <form action="{{url_for('buscarpaciente')}}" method="post" class="buscar-form">
-                            <label for="nombre" class="buscar-label">BUSQUEDA:</label>
-                            <div class="input-group">
-                                <input type="text" id="nombre" name="nombrepac" class="buscar-input"
-                                    placeholder="Buscar...">
-                                <button type="submit" class="buscar-btn"><i class="fas fa-search"></i></button>
-                            </div>
-                        </form>
-                        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
-                            <h2>Lista de Usuarios</h2>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>N°</th>
-                                        <th>Nombres</th>
-                                        <th>Apellidos</th>
 
-                                        <th>Cedula de Identidad</th>
+                    <form action="{{url_for('buscarpaciente')}}" method="post" class="buscar-form">
+                        <label for="nombre" class="buscar-label">BUSQUEDA:</label>
+                        <div class="input-group">
+                            <input type="text" id="nombre" name="nombrepac" class="buscar-input"
+                                placeholder="Buscar...">
+                            <button type="submit" class="buscar-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                    <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+                        <h2>Lista de Usuarios</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
 
-                                        <th>Fecha de nacimiento</th>
-                                        <th>
-                                            Operaciones
-                                        </th>
-                                        <!-- Agrega más encabezados según tu estructura de datos -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for paciente in listapac %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <td>{{ paciente.nombres }}</td>
-                                        <td>{{ paciente.apellidos }}</td>
+                                    <th>Cedula de Identidad</th>
 
-                                        <td>{{ paciente.cedulapac }}</td>
+                                    <th>Fecha de nacimiento</th>
+                                    <th>Operador</th>
+                                    <th>
+                                        Operaciones
+                                    </th>
+                                    <!-- Agrega más encabezados según tu estructura de datos -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for paciente in listapac %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ paciente.nombres }}</td>
+                                    <td>{{ paciente.apellidos }}</td>
 
-                                        <td>{{ paciente.fechanacpc }}</td>
-                                        <td>
+                                    <td>{{ paciente.cedulapac }}</td>
 
-                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                                data-bs-target="#modaleditar{{ paciente.id_paciente }}">
-                                                <i class="bi bi-pencil-fill"></i>
-                                            </button>
-                                            <div class="modal fade" id="modaleditar{{ paciente.id_paciente }}"
-                                                tabindex="-1" aria-labelledby="modaleditar{{ paciente.id_paciente }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="modaleditar">
-                                                                Registro Pacientes
-                                                            </h1>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
+                                    <td>{{ paciente.fechanacpc }}</td>
+                                    <td>{{ paciente.nombre_usuario }}</td>
+                                    <td>
 
-
-                                                            <form
-                                                                action="{{ url_for('update_pac', id_paciente=paciente.id_paciente) }}"
-                                                                method="post">
-
-                                                                <p>Nombres</p>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="nombre" name="txtnombrepac"
-                                                                    value="{{ paciente.nombres }}" /><br>
-                                                                <p>Apellidos</p>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Apellidos" name="txtapellidopac"
-                                                                    value="{{ paciente.apellidos }}" /><br>
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#modaleditar{{ paciente.id_paciente }}">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <div class="modal fade" id="modaleditar{{ paciente.id_paciente }}" tabindex="-1"
+                                            aria-labelledby="modaleditar{{ paciente.id_paciente }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="modaleditar">
+                                                            Registro Pacientes
+                                                        </h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
 
 
-                                                                <p>Cedula de Identidad</p>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Cedula de identidad"
-                                                                    name="txtcedulapac"
-                                                                    value="{{ paciente.cedulapac }}" /><br>
+                                                        <form
+                                                            action="{{ url_for('update_pac', id_paciente=paciente.id_paciente) }}"
+                                                            method="post">
 
-                                                                <p>Fecha de Nacimiento</p>
-                                                                <input type="date" class="form-control"
-                                                                    placeholder="Fecha" name="txtfechanacpac"
-                                                                    value="{{ paciente.fechanacpc }}" /><br>
+                                                            <p>Nombres</p>
+                                                            <input type="text" class="form-control" placeholder="nombre"
+                                                                name="txtnombrepac" value="{{ paciente.nombres }}"
+                                                                pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                                title="Solo se permiten letras y espacios" /><br>
+                                                            <p>Apellidos</p>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Apellidos" name="txtapellidopac"
+                                                                value="{{ paciente.apellidos }}"
+                                                                pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                                title="Solo se permiten letras y espacios" /><br>
 
 
-                                                                <button type="submit"
-                                                                    class="btn btn-outline-success">EDITAR</button>
+                                                            <p>Cedula de Identidad</p>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Cedula de identidad" name="txtcedulapac"
+                                                                value="{{ paciente.cedulapac }}" minlength="4" /><br>
 
-                                                            </form>
+                                                            <p>Fecha de Nacimiento</p>
+                                                            <input type="date" class="form-control" placeholder="Fecha"
+                                                                name="txtfechanacpac" value="{{ paciente.fechanacpc }}"
+                                                                min="1950-01-01" max="2000-01-01" /><br>
+                                                            <!--<p>operadores</p>
+                                                            <select id="operador" name="operador" required>
+                                                                {% for operador in operadores %}
+                                                                <option value="{{ operador.id }}">{{ operador.nombre
+                                                                    }}</option>
+                                                                {% endfor %}
+                                                            </select><br>-->
 
-                                                        </div>
+                                                            <button type="submit"
+                                                                class="btn btn-outline-success">EDITAR</button>
+
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="/borrarpaciente/{{paciente.id_paciente}}"
-                                                class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></a>
-                                        </td>
-                                        <!-- Agrega más campos según tu estructura de datos -->
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="pacientes" style="display:none;"> <!-- Lista de Pacientes -->
-                            <!-- Aquí va el contenido de la lista de pacientes -->
-                            <h2>Lista de Pacientes</h2>
-                            <ul>
-                                <li>Paciente 1</li>
-                                <li>Paciente 2</li>
-                                <!-- Agrega más elementos según tu estructura de datos -->
-                            </ul>
-                        </div>
+                                        </div>
+                                        <a href="/borrarpaciente/{{paciente.id_paciente}}"
+                                            class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                    <!-- Agrega más campos según tu estructura de datos -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
+
                 </div>
 
             </main>
         </div>
     </div>
-    <script src="{{url_for('static', filename= 'js/listar.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-bVUxdIeZP4ZmXO6FHzHG5wF/BJnA3kEAlV2JfZ+K5C6heqJwXJgvR6d88Mz02M9Q"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha384-uUo3yF7RKL4Ct2S7Elny2y4EmlnOMc5lAElZBOAM4ltdaL+m5ZHpZa6mXO8JlU1M"
-        crossorigin="anonymous"></script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

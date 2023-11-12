@@ -10,19 +10,19 @@ app = Flask(__name__, template_folder='template')
 app.secret_key = "diego"
 
 # Configuración de la base de datos MySQL
-app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'Di3gh003'
-app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
-app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
+# app.config['MYSQL_USER'] = 'Di3gh003'
+# app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
+# app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# mysql = MySQL(app)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = ''
-#app.config['MYSQL_DB'] = 'plataforma'
-#app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-#mysql = MySQL(app)
 
 
 @app.route('/')
@@ -59,6 +59,7 @@ def login():
 
             # Redirigir según el rol del usuario
             if session['id_rol'] == 1:
+
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT * FROM usuarios")
                 cur.close()
@@ -94,6 +95,7 @@ def crear_registro():
     fechanac = request.form['txtfechanac']
     cedula = request.form['txtcedula']
     profesion = request.form['txtprofesion']
+    telefono = request.form['txttelefono']
 
     # Conexión a la base de datos y ejecución de la verificación
     cur = mysql.connection.cursor()
@@ -109,8 +111,8 @@ def crear_registro():
 
     # Si el correo no está registrado, realizar la inserción
     cur.execute(
-        "INSERT INTO usuarios (usuario, contraseña, nombre, apellido, fechanac, cedula, profesion, id_rol) VALUES (%s, %s, %s, %s, %s, %s, %s, '2')",
-        (correo, password, nombre, apellido, fechanac, cedula, profesion))
+        "INSERT INTO usuarios (usuario, contraseña, nombre, apellido, fechanac, cedula, profesion,telefono, id_rol) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, '2')",
+        (correo, password, nombre, apellido, fechanac, cedula, profesion, telefono))
     mysql.connection.commit()
 
     # Mostrar mensaje de éxito
@@ -118,12 +120,46 @@ def crear_registro():
     return render_template("index.html", mensaje2="Usuario registrado exitosamente")
 
 
+@app.route('/crear-registroadm', methods=["POST"])
+def crear_registroadm():
+    # Obtener datos del formulario
+    correo = request.form['txtCorreo']
+    password = request.form['txtPassword']
+    nombre = request.form['txtnombre']
+    apellido = request.form['txtapellido']
+    fechanac = request.form['txtfechanac']
+    cedula = request.form['txtcedula']
+    telefono = request.form['txttelefono']
+    profesion = request.form['txtprofesion']
+
+    # Conexión a la base de datos y ejecución de la verificación
+    cur = mysql.connection.cursor()
+
+    # Verificar si el correo ya está registrado
+    cur.execute("SELECT * FROM usuarios WHERE usuario = %s", (correo,))
+    usuario_existente = cur.fetchone()
+
+    if usuario_existente:
+        # Si el correo ya está registrado, mostrar mensaje de error
+        flash('Correo electrónico ya registrado. Por favor, utiliza otro correo.')
+        return redirect(url_for('admin'))
+
+    # Si el correo no está registrado, realizar la inserción
+    cur.execute(
+        "INSERT INTO usuarios (usuario, contraseña, nombre, apellido, fechanac, cedula,profesion, telefono, id_rol) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, '2')",
+        (correo, password, nombre, apellido, fechanac, cedula, profesion, telefono))
+    mysql.connection.commit()
+
+    # Mostrar mensaje de éxito
+    flash('Usuario registrado exitosamente')
+    return redirect(url_for('admin'))
 # ------------------------------------------ADMIN---------------------------------------------------------
 
 
 @app.route('/admin', methods=["GET"])
 def admin():
     if 'logueado' in session and session['id_rol'] == 1:
+
         operadores = listarop()
         return render_template('admin.html', operadores=operadores)
     flash('DEBES INICIAR SESION PARA PODER ACCEDER')
@@ -138,19 +174,21 @@ def agregarpacad():
     apellidopac = request.form['txtapellidopactec']
     cedulapac = request.form['txtcedulapactec']
     fechanacpac = request.form['txtfechanacpactec']
+
     operador_id = request.form['operador']
 
     if nombrepac and apellidopac and fechanacpac and cedulapac and id:
         # Conexión a la base de datos y ejecución de la inserción
         cur = mysql.connection.cursor()
-        sql = "INSERT INTO paciente (nombres, apellidos, cedulapac, fechanacpc, id) VALUES (%s, %s, %s, %s, %s )"
-        data = (nombrepac, apellidopac, cedulapac, fechanacpac, operador_id)
+        sql = "INSERT INTO paciente (nombres, apellidos, cedulapac, fechanacpc, id) VALUES (%s,%s, %s, %s, %s )"
+        data = (nombrepac, apellidopac, cedulapac,
+                fechanacpac, operador_id)
         cur.execute(sql, data)
         mysql.connection.commit()
 
     # Mostrar mensaje de éxito
     flash('Paciente Agregado Exitosamente')
-    return redirect(url_for('listar', mensaje2="Paciente Registrado Exitosamente"))
+    return redirect(url_for('admin'))
 
 
 @app.route('/updatepac/<id_paciente>', methods=['POST'])
@@ -174,10 +212,13 @@ def update_pac(id_paciente):
                 cedulapac = %s,
                 
                 fechanacpc = %s
+                
         WHERE id_paciente = %s
     """, (nombres, apellidos, cedulapac, fechanacpac, id_paciente))
     mysql.connection.commit()
-    return jsonify({'message': 'Paciente actualizado'})
+    flash('Actualización Exitosa!')
+
+    return redirect(url_for('listarpaciente'))
 
 
 # lista de operadores
@@ -205,8 +246,8 @@ def buscarusuario():
         termino_busqueda = request.form['nombre']
 
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM usuarios WHERE nombre LIKE %s OR cedula = %s OR apellido LIKE %s OR profesion LIKE %s",
-                    ('%' + termino_busqueda + '%', termino_busqueda, '%' + termino_busqueda + '%', termino_busqueda + '%'))
+        cur.execute("SELECT * FROM usuarios WHERE nombre LIKE %s OR cedula = %s OR apellido LIKE %s OR usuario LIKE %s OR profesion LIKE %s",
+                    ('%' + termino_busqueda + '%', termino_busqueda, '%' + termino_busqueda + '%', termino_busqueda + '%', termino_busqueda + '%'))
 
         lista = cur.fetchall()
         return render_template('listar.html', lista=lista)
@@ -231,6 +272,7 @@ def update_operador(id):
         cedula = request.form['txtcedulaop']
         profesion = request.form['txtprofesionop']
         fechanac = request.form['txtfechanacop']
+        telefono = request.form['txttelefono']
 
     cur = mysql.connection.cursor()
     cur.execute("""
@@ -241,11 +283,12 @@ def update_operador(id):
                 contraseña = %s,
                 cedula = %s,
                 profesion = %s,
+                telefono =%s,
                 fechanac = %s
         WHERE id = %s
-    """, (nombres, apellidos, correo, contraseña, cedula, profesion, fechanac, id))
+    """, (nombres, apellidos, correo, contraseña, cedula, profesion, telefono, fechanac, id))
     mysql.connection.commit()
-    flash('contacto actualizado')
+    flash('Usuario actualizado')
     return redirect(url_for('listar'))
 
 
@@ -365,15 +408,17 @@ def paciente():
 @app.route('/listarpaciente', methods=["GET"])
 def listarpaciente():
     if 'logueado' in session:
+        operadores = listarop()
         # Consulta a la base de datos para obtener una lista de usuarios con id_rol igual a 1
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM paciente WHERE id_paciente")
+        cur.execute(
+            "SELECT paciente.*, usuarios.nombre AS nombre_usuario FROM paciente LEFT JOIN usuarios ON paciente.id = usuarios.id")
         listapac = cur.fetchall()
 
         cur.close()
 
         # Renderizar la página 'listar.html' con la lista de usuarios
-        return render_template('listarpaciente.html', listapac=listapac)
+        return render_template('listarpaciente.html', listapac=listapac, operadores=operadores)
     return render_template('index.html')
 
 

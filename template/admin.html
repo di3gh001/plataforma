@@ -18,21 +18,28 @@
     <div class="container-fluid">
         <div class="row justify-content-center align-content-center">
             <div class="col-8 barra">
-                <h4 class="text-light">BIENVENIDO</h4>
+                <h4 class="text-light">BIENVENIDO, {{session['nombreadmin']}}</h4>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading">{{ message }}</h4>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
             </div>
             <div class="col-4 text-right barra">
                 <ul class="navbar-nav mr-auto">
-                    <li>
-                        <a href="#" class="px-3 text-light perfil dropdown-toggle" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                class="fas fa-user-circle user"></i></a>
-
-                        <div class="dropdown-menu" aria-labelledby="navbar-dropdown">
-                            <a class="dropdown-item menuperfil cerrar" href="/logout">
-                                <i class="fas fa-sign-out-alt m-1"></i>Salir
-                            </a>
-                        </div>
-                    </li>
+                    <div class="col-4 text-right barra">
+                        <ul class="navbar-nav mr-auto">
+                            <li>
+                                <a class="dropdown-item menuperfil cerrar" href="/logout">
+                                    <i class="fas fa-sign-out-alt m-1"></i>Salir
+                            </li>
+                        </ul>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -54,6 +61,7 @@
                 <div class="row justify-content-center align-content-center text-center">
                     <div class="columna col-lg-6">
                         <div id="inicio" style="display:none;"> <!-- Contenido de Inicio -->
+
                             <h2>Bienvenido, Administrador {{session['nombre']}}</h2>
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#modalingreso">
@@ -72,22 +80,32 @@
                                         <div class="modal-body">
                                             <!-- Botón de Ingresar -->
 
-                                            <form action="crear-registro" method="post">
+                                            <form action="crear-registroadm" method="post">
                                                 <input type="text" class="form-control" placeholder="Nombres" required
-                                                    name="txtnombre" /><br>
+                                                    name="txtnombre" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" /><br>
                                                 <input type="text" class="form-control" placeholder="Apellidos" required
-                                                    name="txtapellido" /><br>
+                                                    name="txtapellido" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" /><br>
                                                 <input type="text" class="form-control" placeholder="Correo" required
                                                     name="txtCorreo" /><br>
 
                                                 <input type="password" class="form-control" placeholder="Contraseña"
                                                     required name="txtPassword" minlength="6" /><br>
-                                                <input type="text" class="form-control" placeholder="Profesion" required
-                                                    name="txtprofesion" /><br>
+                                                <input type="text" class="form-control" placeholder="Telefono/Celular"
+                                                    name="txttelefono" minlength="7" /><br>
+                                                <select name="txtprofesion" class="form-control">
+                                                    <option value="ING. BIOMEDICA">ING. BIOMEDICA</option>
+                                                    <option value="ESTUDIANTE">ESTUDIANTE</option>
+                                                    <option value="FISIOTERAPIA">FISIOTERAPIA</option>
+                                                    <option value="ENFERMERIA">ENFERMERIA</option>
+                                                </select><br>
                                                 <input type="text" class="form-control"
-                                                    placeholder="Cedula de identidad" required name="txtcedula" /><br>
+                                                    placeholder="Cedula de identidad" required name="txtcedula"
+                                                    minlength="4" /><br>
                                                 <input type="date" class="form-control"
-                                                    placeholder="Fecha de Nacimiento" required name="txtfechanac" /><br>
+                                                    placeholder="Fecha de Nacimiento" required name="txtfechanac"
+                                                    min="1950-01-01" max="2000-01-01" /><br>
 
 
                                                 <button type="submit" class="btn btn-outline-success">REGISTRAR</button>
@@ -118,16 +136,17 @@
 
                                             <form action="/agregarpacad" method="post">
                                                 <input type="text" class="form-control" placeholder="Nombres"
-                                                    name="txtnombrepactec" />
+                                                    name="txtnombrepactec" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" />
                                                 <br>
 
                                                 <input type="text" class="form-control" placeholder="Apellidos"
-                                                    name="txtapellidopactec" /><br>
+                                                    name="txtapellidopactec" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" /><br>
 
                                                 <input type="text" class="form-control"
                                                     placeholder="Cedula de identidad" name="txtcedulapactec"
                                                     minlength="5" />
-
                                                 <p>Fecha de Nacimiento</p>
                                                 <input type="date" class="form-control" placeholder="Fecha"
                                                     name="txtfechanacpactec" /><br>
@@ -191,12 +210,8 @@
             </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-bVUxdIeZP4ZmXO6FHzHG5wF/BJnA3kEAlV2JfZ+K5C6heqJwXJgvR6d88Mz02M9Q"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha384-uUo3yF7RKL4Ct2S7Elny2y4EmlnOMc5lAElZBOAM4ltdaL+m5ZHpZa6mXO8JlU1M"
-        crossorigin="anonymous"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
