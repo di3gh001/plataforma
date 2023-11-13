@@ -444,22 +444,22 @@ def usuario():
     return render_template('index.html')
 
 
-#@app.errorhandler(Exception)
-#def handle_error(e):
- #   ruta = request.path
-  #  mensaje = traceback.format_exc()
+@app.errorhandler(Exception)
+def handle_error(e):
+    ruta = request.path
+    mensaje = traceback.format_exc()
 
     # Insertar el error en la base de datos
-   # try:
-    #    with app.app_context():
-     #       cur = mysql.connection.cursor()
-      #      cur.execute(
-       #         "INSERT INTO errores (ruta, mensaje) VALUES (%s, %s)", (ruta, mensaje))
-        #    mysql.connection.commit()
-    #except Exception as db_error:
-     #   print(f"Error al insertar en la base de datos: {db_error}")
+    try:
+        with app.app_context():
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "INSERT INTO errores (ruta, mensaje) VALUES (%s, %s)", (ruta, mensaje))
+            mysql.connection.commit()
+    except Exception as db_error:
+        print(f"Error al insertar en la base de datos: {db_error}")
 
-    #return render_template('error.html', error=e), 500
+    return render_template('error.html', error=e), 500
 
 
 @app.route('/agregarpac', methods=["POST"])
@@ -468,7 +468,7 @@ def agregarpac():
     apellidopac = request.form['txtapellidopac']
     cedulapac = request.form['txtcedulapac']
     fechanacpac = request.form['txtfechanacpac']
-    operador= session['id']
+    operador = session['id']
 
     # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
     cur = mysql.connection.cursor()
@@ -480,7 +480,7 @@ def agregarpac():
     else:
         # El paciente no existe, entonces se agrega a la base de datos
         sql = "INSERT INTO paciente (nombres, apellidos, cedulapac, fechanacpc, id) VALUES (%s, %s, %s, %s, %s )"
-        data = (nombrepac, apellidopac, cedulapac, fechanacpac,operador)
+        data = (nombrepac, apellidopac, cedulapac, fechanacpac, operador)
         cur.execute(sql, data)
         mysql.connection.commit()
         flash('Paciente Agregado Exitosamente')
