@@ -326,18 +326,20 @@
 
                                     <form action="/agregarpactec" method="post">
                                         <input type="text" class="form-control" placeholder="Nombres"
-                                            name="txtnombrepactec" />
+                                            name="txtnombrepactec" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                            title="Solo se permiten letras y espacios" />
                                         <br>
 
                                         <input type="text" class="form-control" placeholder="Apellidos"
-                                            name="txtapellidopactec" /><br>
+                                            name="txtapellidopactec" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                            title="Solo se permiten letras y espacios" /><br>
 
                                         <input type="text" class="form-control" placeholder="Cedula de identidad"
                                             name="txtcedulapactec" minlength="5" />
 
                                         <p>Fecha de Nacimiento</p>
                                         <input type="date" class="form-control" placeholder="Fecha"
-                                            name="txtfechanacpactec" /><br>
+                                            name="txtfechanacpactec" min="1950-01-01" max="2000-01-01" /><br>
                                         <label for="operador">OPERADOR:</label>
                                         <select id="operador" name="operador" required>
                                             {% for operador in operadores %}
@@ -450,7 +452,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h1 class="modal-title fs-5" id="modaleditar">
-                                                Registro Pacientes
+                                                Actualizar Datos de Pacientes
                                             </h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
@@ -482,7 +484,7 @@
                                                 <p>Fecha de Nacimiento</p>
                                                 <input type="date" class="form-control" placeholder="Fecha"
                                                     name="txtfechanacpac" value="{{ paciente.fechanacpc }}"
-                                                    min="1950-01-01" max="2000-01-01" /><br>
+                                                    min="1950-01-01" max="2020-01-01" /><br>
                                                 <p>operadores</p>
                                                 <select id="operador" name="operador" required>
                                                     {% for operador in operadores %}
@@ -605,6 +607,7 @@
                         <th>Tiempo para Completar</th>
                         <th>Fecha y hora</th>
                         <th>Mano ejercitada</th>
+                        <th>Paciente</th>
 
                         <th>
                             Operaciones

@@ -21,10 +21,28 @@
 </head>
 
 <body class="container">
-    <a href="{{ url_for('paciente') }}" class="btn btn-primary">Volver</a>
+    <audio id="musica1" loop autoplay>
+        <source src="/static/music/musicaniño.mp3" type="audio/mpeg">
+        <source src="/static/music/musicaniño.ogv" type="audio/ogg">
 
+    </audio>
+    <a href="{{ url_for('paciente') }}" class="btn btn-primary">Volver</a>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for messages in messages%}
+
+    <div class="alert alert-dismissible alert-danger" xt-marked="ok">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
+        <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+    </div>
+
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div>
-        <img src="static/img/TITULO1.JPG" class="d-block w-100" style="width: 200px; height: 100px;"
+        <img src="static/img/lista.png" class="d-block w-100" style="width: 200px; height: 100px;"
             alt="Descripción de la imagen">
     </div>
     <div>
@@ -34,21 +52,23 @@
 
                     <a href="/juego1" method="post">
                         <img src="static/img/TITULO.png" class="d-block w-50 mx-auto" alt="Responsive image">
-                        <h1 class="d-block w-50 mx-auto">ATRAPA AL RATON LO <br>MAS RAPIDO QUE PUEDAS!!!</h1>
+                        <h1 class="d-block w-50 mx-auto">Nivel 1</h1>
                     </a>
 
                     <!-- w-50 para reducir el ancho al 50% -->
                 </div>
                 <div class="carousel-item">
                     <a href="/juego2" method="post">
-                        <img src="static/img/BLOQUEFONDO.JPG" class="d-block w-60 mx-auto" alt="Responsive image">
-                        <h1 class="d-block w-50 mx-auto">DERRIBA LOS BLOQUES <br>Y HAZLOS CAER!!!</h1>
+                        <img src="static/img/BLOQUEFONDO.JPG" class="d-block mx-auto" alt="Responsive image" width="600"
+                            height="300">
+
+                        <h1 class="d-block w-50 mx-auto">Nivel 2</h1>
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="/juego3" method="post">
                         <img src="static/img/AGARRAR.jpeg" class="d-block w-20 mx-auto" alt="Responsive image">
-                        <h1 class="d-block w-50 mx-auto">ATRAPAS LOS BLQOUES </h1>
+                        <h1 class="d-block w-50 mx-auto">Nivel 3 </h1>
 
                     </a>
                 </div>
@@ -63,7 +83,33 @@
             </button>
         </div>
 
+
     </div>
+    <script>
+        function mostrarContenido(contenido) {
+            var contenidos = document.querySelectorAll('[id^="contenido"]');
+            contenidos.forEach(function (element) {
+                element.style.display = 'none';
+            });
+
+            var contenedor = document.getElementById(contenido);
+            contenedor.style.display = 'block';
+        }
+        function Playaudio() {
+            var audio = document.getElementById("musica1");
+            audio.play();
+        }
+
+        window.onload = function () {
+            Playaudio();
+        }
+
+        window.onbeforeunload = function () {
+            var audio = document.getElementById("musica1");
+            audio.pause();
+            audio.currentTime = 0;
+        }
+    </script>
 
 
 

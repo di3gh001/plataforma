@@ -15,21 +15,49 @@
 </head>
 
 <body>
-<style>
-    canvas{
-        margin: auto;
-        display: block;
-        border: 1px solid white;
-    }
-    body { 
-        background-color: rgb(3, 18, 68);
-        margin: 0; overflow: hidden; }
-</style>
+    <style>
+        canvas {
+            margin: auto;
+            display: block;
+            border: 1px solid white;
+        }
+
+        body {
+            background-color: rgb(3, 18, 68);
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
 
     <script src="static/JUEGO1izq/index.js" type="module"></script>
     <div class="container">
         <video class="input_video video-container"></video>
     </div>
+    <script>
+        function mostrarContenido(contenido) {
+            var contenidos = document.querySelectorAll('[id^="contenido"]');
+            contenidos.forEach(function (element) {
+                element.style.display = 'none';
+            });
+
+            var contenedor = document.getElementById(contenido);
+            contenedor.style.display = 'block';
+        }
+        function Playaudio() {
+            var audio = document.getElementById("musica1");
+            audio.play();
+        }
+
+        window.onload = function () {
+            Playaudio();
+        }
+
+        window.onbeforeunload = function () {
+            var audio = document.getElementById("musica1");
+            audio.pause();
+            audio.currentTime = 0;
+        }
+    </script>
 
 </body>
 

@@ -17,7 +17,7 @@ app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
 app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-
+#
 #app.config['MYSQL_HOST'] = 'localhost'
 #app.config['MYSQL_USER'] = 'root'
 #app.config['MYSQL_PASSWORD'] = ''

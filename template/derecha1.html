@@ -15,21 +15,29 @@
 </head>
 
 <body>
-<style>
-    canvas{
-        margin: auto;
-        display: block;
-        border: 1px solid white;
-    }
-    body { 
-        background-color: rgb(3, 18, 68);
-        margin: 0; overflow: hidden; }
-</style>
+    <style>
+        canvas {
+            margin: auto;
+            display: block;
+            border: 1px solid white;
+        }
 
+        body {
+            background-color: rgb(3, 18, 68);
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <audio id="musica1" loop autoplay>
+        <source src="/static/music/juego1.mp3" type="audio/mpeg">
+        <source src="/static/music/musicaniño.ogv" type="audio/ogg">
+
+    </audio>
     <script src="static/JUEGO1/index.js" type="module"></script>
     <div class="container">
         <video class="input_video video-container"></video>
     </div>
+
 
 </body>
 

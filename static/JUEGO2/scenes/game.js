@@ -20,7 +20,7 @@ export class Game extends Phaser.Scene {
 
     preload() {
         this.load.image('background', 'static/img/fondo2.jpg');
-        this.load.image('dona', 'static/img/botondon.png');
+        this.load.image('dona', 'static/img/pelota.png');
         this.load.image('rectangulo', 'static/img/equals.png');
         this.load.image('crate32', 'static/img/equals.png');
         this.load.image('plataforma', 'static/img/platform.png');

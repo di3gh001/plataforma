@@ -20,7 +20,7 @@ export class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'static/img/background.png');
+        this.load.image('background', 'static/img/fondoraton.jpg');
         this.load.image('gameover', 'static/img/gameover.png');
         this.load.image('raton', 'static/img/raton.png');
         this.load.image('gato', 'static/img/gato.png');
