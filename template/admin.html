@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center align-content-center">
             <div class="col-8 barra">
-                <h4 class="text-light">BIENVENIDO, {{session['nombre']}}</h4>
+                <h4 class="text-light">BIENVENIDO, {{session['nombre']}} {{session['apellido']}}</h4>
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 {% for message in messages %}
@@ -153,7 +153,7 @@
                                                 <label for="operador">OPERADOR:</label>
                                                 <select id="operador" name="operador" required>
                                                     {% for operador in operadores %}
-                                                    <option value="{{ operador.id }}">{{ operador.nombre }}</option>
+                                                    <option value="{{ operador.id }}">{{ operador.nombre }} {{ operador.apellido }}</option>
                                                     {% endfor %}
                                                 </select><br>
                                                 <button type="submit" class="btn btn-outline-success">AGREGAR

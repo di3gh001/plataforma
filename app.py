@@ -436,6 +436,24 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+@app.errorhandler(Exception)
+def handle_error(e):
+    ruta = request.path
+    mensaje = traceback.format_exc()
+
+    # Insertar el error en la base de datos
+    try:
+        with app.app_context():
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "INSERT INTO errores (ruta, mensaje) VALUES (%s, %s)", (ruta, mensaje))
+            mysql.connection.commit()
+    except Exception as db_error:
+        print(f"Error al insertar en la base de datos: {db_error}")
+
+    return render_template('error.html', error=e), 500
+
+
 @app.route('/agregarpac', methods=["POST"])
 def agregarpac():
     nombrepac = request.form['txtnombrepac']

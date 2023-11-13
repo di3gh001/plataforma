@@ -353,7 +353,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table table-striped" id="miTabla3">
+                    <table class="table table-striped" id="miTabla6">
                         <thead>
                             <tr>
                                 <th>N°</th>
@@ -397,6 +397,15 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <script>
+                        $(document).ready(function () {
+                            $('#miTabla6').DataTable({
+                                "paging": true, // Habilita la paginación
+                                "pageLength": 10, // Establece la cantidad de registros por página
+                                "pagingType": "full_numbers"
+                            });
+                        });
+                    </script>
                 </li>
             </form>
         </nav>
