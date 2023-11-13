@@ -10,14 +10,20 @@
 </head>
 
 <body>
-
+    <a href="{{ url_for('paciente') }}" class="btn btn-primary">Volver</a>
     <div class="container text-center">
         <div class="row align-items-start">
             <div class="col">
-                One of three columns
+                <form action="/derecha1" method="post">
+                    <button type="submit" class="btn btn-outline-success">DERECHA</button>
+
+                </form>
             </div>
             <div class="col">
-                One of three columns
+                <form action="/izquierda1" method="post">
+                    <button type="submit" class="btn btn-outline-success">IZQUIERDA</button>
+
+                </form>
             </div>
             <div class="col">
                 One of three columns
@@ -26,15 +32,9 @@
     </div>
     <div>
         <div>
-            <form action="/derecha1" method="post">
-                <button type="submit" class="btn btn-outline-success">DERECHA</button>
 
-            </form>
 
-            <form action="/izquierda1" method="post">
-                <button type="submit" class="btn btn-outline-success">IZQUIERDA</button>
 
-            </form>
         </div>
     </div>
 
