@@ -11,19 +11,19 @@ app = Flask(__name__, template_folder='template')
 app.secret_key = "diego"
 
 # Configuración de la base de datos MySQL
-# app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
-# app.config['MYSQL_USER'] = 'Di3gh003'
-# app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
-# app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
-# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-# mysql = MySQL(app)
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'plataforma'
+app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'Di3gh003'
+app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
+app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
+
+#app.config['MYSQL_HOST'] = 'localhost'
+#app.config['MYSQL_USER'] = 'root'
+#app.config['MYSQL_PASSWORD'] = ''
+#app.config['MYSQL_DB'] = 'plataforma'
+#app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+#mysql = MySQL(app)
 
 
 @app.route('/')
