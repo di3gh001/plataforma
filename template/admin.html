@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center align-content-center">
             <div class="col-8 barra">
-                <h4 class="text-light">BIENVENIDO, {{session['nombreadmin']}}</h4>
+                <h4 class="text-light">BIENVENIDO, {{session['nombre']}}</h4>
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 {% for message in messages %}
@@ -62,7 +62,7 @@
                     <div class="columna col-lg-6">
                         <div id="inicio" style="display:none;"> <!-- Contenido de Inicio -->
 
-                            <h2>Bienvenido, Administrador {{session['nombre']}}</h2>
+                            <h2>Bienvenido, Administrador </h2>
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#modalingreso">
                                 <i class="bi bi-person-add"></i><br>Agregar Operador

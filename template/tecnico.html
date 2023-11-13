@@ -11,6 +11,10 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <style>
         .contenido {
             display: none;
@@ -18,27 +22,6 @@
 
         .activo {
             display: block;
-        }
-
-        #buscador {
-            margin-bottom: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
         }
     </style>
 </head>
@@ -49,6 +32,16 @@
 
         <div class="container-fluid">
             <a class="navbar-brand">SOPORTE TECNICO, {{session['nombre']}} {{session['apellido']}}</a>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <h4 class="alert-heading">{{ message }}</h4>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
 
         </div>
@@ -71,13 +64,16 @@
             <a class="nav-link" href="#" onclick="mostrarContenido('contenido2')">LISTA DE PACIENTES</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">TRATAMIENTOS</a>
+            <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">JUEGO 1</a>
         </li>
-        <li>
-
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="mostrarContenido('contenido4')">JUEGO 2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="mostrarContenido('contenido5')">JUEGO 3</a>
         </li>
 
-        <a class="dropdown-item menuperfil cerrar" href="/logout">
+        <a class=" menuperfil cerrar" href="/logout">
             <i class="btn btn-outline-danger">Salir<i class="bi bi-box-arrow-right"></i></i>
         </a>
 
@@ -87,7 +83,6 @@
 
         <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
             <h2>Lista de Usuarios</h2>
-            <input type="text" id="buscador1" placeholder="Buscar en la tabla">
 
             <table id="miTabla1" class="table table-striped">
                 <thead>
@@ -170,61 +165,41 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="/borraroperadortec/{{operador.id}}" class="btn btn-danger btn-delete"><i
-                                    class="bi bi-trash"></i></a>
+
+                            <a href="#" class="btn btn-danger btn-delete"
+                                onclick="confirmarEliminacion('{{ operador.id }}')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <script>
+                                function confirmarEliminacion(userId) {
+                                    // Mostrar una ventana de confirmación
+                                    var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                    // Si el usuario confirma, redirigir a la ruta de eliminación
+                                    if (confirmacion) {
+                                        window.location.href = "/borraroperadortec/" + userId;
+                                    }
+                                }
+                            </script>
                         </td>
                         <!-- Agrega más campos según tu estructura de datos -->
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
             <script>
-                document.getElementById('buscador1').addEventListener('input', function () {
-                    var input, filter, table, tr, td, i, j, txtValue;
-                    input = document.getElementById('buscador1');
-                    filter = input.value.toUpperCase();
-                    table = document.getElementById('miTabla1');
-                    tr = table.getElementsByTagName('tr');
-
-                    for (i = 0; i < tr.length; i++) {
-                        var found = false;
-                        for (j = 0; j < tr[i].getElementsByTagName('td').length; j++) {
-                            td = tr[i].getElementsByTagName('td')[j];
-                            if (td) {
-                                txtValue = td.textContent || td.innerText;
-                                // Verifica si alguna celda contiene el texto de búsqueda
-                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // Muestra u oculta la fila según si se encontró alguna coincidencia en alguna celda
-                        if (found) {
-                            tr[i].style.display = '';
-                        } else {
-                            tr[i].style.display = 'none';
-                        }
-                    }
+                $(document).ready(function () {
+                    $('#miTabla1').DataTable({
+                        "paging": true, // Habilita la paginación
+                        "pageLength": 10, // Establece la cantidad de registros por página
+                        "pagingType": "full_numbers"
+                    });
                 });
             </script>
         </div>
     </div>
     <div id="contenido1" class="contenido activo">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flash-messages">
-            {% for message in messages %}
-            <li class="flash-message">
-                {{ message }}
-                <button class="close-button" onclick="cerrarMensaje(this)">X</button>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-
         <nav class="navbar bg-body-tertiary">
 
             <form class="container-fluid justify-content-start">
@@ -301,22 +276,30 @@
                                 <div class="modal-body">
                                     <!-- Botón de Ingresar -->
 
-                                    <form action="crear-registro" method="post">
+                                    <form action="crear-registrotec" method="post">
                                         <input type="text" class="form-control" placeholder="Nombres" required
-                                            name="txtnombre" /><br>
+                                            name="txtnombre" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                            title="Solo se permiten letras y espacios" /><br>
                                         <input type="text" class="form-control" placeholder="Apellidos" required
-                                            name="txtapellido" /><br>
+                                            name="txtapellido" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                            title="Solo se permiten letras y espacios" /><br>
                                         <input type="text" class="form-control" placeholder="Correo" required
                                             name="txtCorreo" /><br>
 
                                         <input type="password" class="form-control" placeholder="Contraseña" required
                                             name="txtPassword" minlength="6" /><br>
-                                        <input type="text" class="form-control" placeholder="Profesion" required
-                                            name="txtprofesion" /><br>
+                                        <input type="text" class="form-control" placeholder="Telefono/Celular"
+                                            name="txttelefono" minlength="7" /><br>
+                                        <select name="txtprofesion" class="form-control">
+                                            <option value="ING. BIOMEDICA">ING. BIOMEDICA</option>
+                                            <option value="ESTUDIANTE">ESTUDIANTE</option>
+                                            <option value="FISIOTERAPIA">FISIOTERAPIA</option>
+                                            <option value="ENFERMERIA">ENFERMERIA</option>
+                                        </select><br>
                                         <input type="text" class="form-control" placeholder="Cedula de identidad"
-                                            required name="txtcedula" /><br>
+                                            required name="txtcedula" minlength="4" /><br>
                                         <input type="date" class="form-control" placeholder="Fecha de Nacimiento"
-                                            required name="txtfechanac" /><br>
+                                            required name="txtfechanac" min="1950-01-01" max="2000-01-01" /><br>
 
 
                                         <button type="submit" class="btn btn-outline-success">REGISTRAR</button>
@@ -363,7 +346,8 @@
                                         <label for="operador">OPERADOR:</label>
                                         <select id="operador" name="operador" required>
                                             {% for operador in operadores %}
-                                            <option value="{{ operador.id }}">{{ operador.nombre }}</option>
+                                            <option value="{{ operador.id }}">{{ operador.nombre }},{{ operador.apellido
+                                                }}</option>
                                             {% endfor %}
                                         </select><br>
                                         <button type="submit" class="btn btn-outline-success">AGREGAR PACIENTE</button>
@@ -374,13 +358,55 @@
                             </div>
                         </div>
                     </div>
+                    <table class="table table-striped" id="miTabla3">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Ruta</th>
+                                <th>Mensaje</th>
+
+
+                                <th>
+                                    Operaciones
+                                </th>
+                                <!-- Agrega más encabezados según tu estructura de datos -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for errores in error %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ errores.ruta }}</td>
+                                <td>{{ errores.mensaje }}</td>
+
+
+                                <td>
+                                    <a href="#" class="btn btn-danger btn-delete"
+                                        onclick="confirmarEliminacion('{{ errores.id_error }}')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <script>
+                                        function confirmarEliminacion(userId) {
+                                            // Mostrar una ventana de confirmación
+                                            var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                            // Si el usuario confirma, redirigir a la ruta de eliminación
+                                            if (confirmacion) {
+                                                window.location.href = "/borrarerror/" + userId;
+                                            }
+                                        }
+                                    </script>
+                                </td>
+                                <!-- Agrega más campos según tu estructura de datos -->
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </li>
             </form>
         </nav>
     </div>
     <div id="contenido2" class="contenido">
-        <input type="text" id="buscador" placeholder="Buscar en la tabla">
-
         <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
             <h2>Lista de pacientes</h2>
 
@@ -392,6 +418,7 @@
                         <th>Apellidos</th>
                         <th>Cedula de Identidad</th>
                         <th>Fecha de Nacimiento</th>
+                        <th>Operador </th>
                         <th>Operaciones </th>
 
 
@@ -406,6 +433,7 @@
                         <td>{{ paciente.apellidos }}</td>
                         <td>{{ paciente.cedulapac }}</td>
                         <td>{{ paciente.fechanacpc }}</td>
+                        <td>{{ paciente.nombre_usuario }}</td>
                         <td>
 
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -424,25 +452,40 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <!-- Botón de Ingresar -->
 
-                                            <form action="updatepactec/{{paciente.id_paciente}}" method="post">
+
+                                            <form
+                                                action="{{ url_for('update_pactec', id_paciente=paciente.id_paciente) }}"
+                                                method="post">
+
                                                 <p>Nombres</p>
                                                 <input type="text" class="form-control" placeholder="nombre"
-                                                    name="txtnombrepac" value="{{ paciente.nombres }}" /><br>
+                                                    name="txtnombrepac" value="{{ paciente.nombres }}"
+                                                    pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" /><br>
                                                 <p>Apellidos</p>
                                                 <input type="text" class="form-control" placeholder="Apellidos"
-                                                    name="txtapellidopac" value="{{ paciente.apellidos }}" /><br>
+                                                    name="txtapellidopac" value="{{ paciente.apellidos }}"
+                                                    pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                    title="Solo se permiten letras y espacios" /><br>
+
 
                                                 <p>Cedula de Identidad</p>
                                                 <input type="text" class="form-control"
                                                     placeholder="Cedula de identidad" name="txtcedulapac"
-                                                    value="{{ paciente.cedulapac }}" /><br>
+                                                    value="{{ paciente.cedulapac }}" minlength="4" /><br>
 
                                                 <p>Fecha de Nacimiento</p>
                                                 <input type="date" class="form-control" placeholder="Fecha"
-                                                    name="txtfechanacpac" value="{{ paciente.fechanacpc }}" /><br>
-
+                                                    name="txtfechanacpac" value="{{ paciente.fechanacpc }}"
+                                                    min="1950-01-01" max="2000-01-01" /><br>
+                                                <p>operadores</p>
+                                                <select id="operador" name="operador" required>
+                                                    {% for operador in operadores %}
+                                                    <option value="{{ operador.id }}">{{ operador.nombre
+                                                        }}</option>
+                                                    {% endfor %}
+                                                </select><br>
 
                                                 <button type="submit" class="btn btn-outline-success">EDITAR</button>
 
@@ -452,8 +495,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="/borraroperador/{{paciente.id_paciente}}" class="btn btn-danger btn-delete"><i
-                                    class="bi bi-trash"></i></a>
+                            <a href="#" class="btn btn-danger btn-delete"
+                                onclick="confirmarEliminacion('{{ paciente.id_paciente }}')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <script>
+                                function confirmarEliminacion(userId) {
+                                    // Mostrar una ventana de confirmación
+                                    var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                    // Si el usuario confirma, redirigir a la ruta de eliminación
+                                    if (confirmacion) {
+                                        window.location.href = "/borrarpacientetec/" + userId;
+                                    }
+                                }
+                            </script>
                         </td>
                         <!-- Agrega más campos según tu estructura de datos -->
                     </tr>
@@ -462,47 +518,28 @@
             </table>
         </div>
         <script>
-            document.getElementById('buscador').addEventListener('input', function () {
-                var input, filter, table, tr, td, i, j, txtValue;
-                input = document.getElementById('buscador');
-                filter = input.value.toUpperCase();
-                table = document.getElementById('miTabla');
-                tr = table.getElementsByTagName('tr');
-
-                for (i = 0; i < tr.length; i++) {
-                    var found = false;
-                    for (j = 0; j < tr[i].getElementsByTagName('td').length; j++) {
-                        td = tr[i].getElementsByTagName('td')[j];
-                        if (td) {
-                            txtValue = td.textContent || td.innerText;
-                            // Verifica si alguna celda contiene el texto de búsqueda
-                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    // Muestra u oculta la fila según si se encontró alguna coincidencia en alguna celda
-                    if (found) {
-                        tr[i].style.display = '';
-                    } else {
-                        tr[i].style.display = 'none';
-                    }
-                }
+            $(document).ready(function () {
+                $('#miTabla').DataTable({
+                    "paging": true, // Habilita la paginación
+                    "pageLength": 10, // Establece la cantidad de registros por página
+                    "pagingType": "full_numbers"
+                });
             });
         </script>
     </div>
+
     <div id="contenido3" class="contenido">
         <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
             <h2>Lista de pacientes</h2>
 
-            <table class="table table-striped">
+            <table class="table table-striped" id="miTabla3">
                 <thead>
                     <tr>
                         <th>N°</th>
-                        <th>NIVEL</th>
-                        <th>HORA</th>
+                        <th>Nivel</th>
+                        <th>Tiempo para Completar</th>
+                        <th>Fecha y hora</th>
+                        <th>Mano ejercitada</th>
 
                         <th>
                             Operaciones
@@ -516,47 +553,25 @@
                         <td>{{ loop.index }}</td>
                         <td>{{ tratamientos.nivel }}</td>
                         <td>{{ tratamientos.hora }}</td>
+                        <td>{{ tratamientos.fechapunto }}</td>
+                        <td>{{ tratamientos.mano }}</td>
 
                         <td>
+                            <a href="#" class="btn btn-danger btn-delete"
+                                onclick="confirmarEliminacion('{{ tratamientos.id_tratamiento }}')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <script>
+                                function confirmarEliminacion(userId) {
+                                    // Mostrar una ventana de confirmación
+                                    var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#modaleditar{{ tratamientos.id_tratamiento }}">
-                                <i class="bi bi-pencil-fill"></i>
-                            </button>
-                            <div class="modal fade" id="modaleditar{{ tratamientos.id_tratamiento }}" tabindex="-1"
-                                aria-labelledby="modaleditar{{ tratamientos.id_tratamiento }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="modaleditar">
-                                                Registro Pacientes
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Botón de Ingresar -->
-
-                                            <form action="updatepactec/{{tratamientos.id_tratamiento}}" method="post">
-                                                <p>Nombres</p>
-                                                <input type="text" class="form-control" placeholder="nombre"
-                                                    name="txtnombrepac" value="{{ tratamientos.nivel }}" /><br>
-                                                <p>Apellidos</p>
-                                                <input type="text" class="form-control" placeholder="Apellidos"
-                                                    name="txtapellidopac" value="{{ tratamientos.hora }}" /><br>
-
-
-
-                                                <button type="submit" class="btn btn-outline-success">EDITAR</button>
-
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="/borraroperador/{{tratamientos.id_tratamiento}}"
-                                class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></a>
+                                    // Si el usuario confirma, redirigir a la ruta de eliminación
+                                    if (confirmacion) {
+                                        window.location.href = "/borrardato/" + userId;
+                                    }
+                                }
+                            </script>
                         </td>
                         <!-- Agrega más campos según tu estructura de datos -->
                     </tr>
@@ -564,9 +579,141 @@
                 </tbody>
             </table>
         </div>
+        <script>
+            $(document).ready(function () {
+                $('#miTabla3').DataTable({
+                    "paging": true, // Habilita la paginación
+                    "pageLength": 10, // Establece la cantidad de registros por página
+                    "pagingType": "full_numbers"
+                });
+            });
+        </script>
+    </div>
+    <div id="contenido4" class="contenido">
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de pacientes</h2>
+
+            <table class="table table-striped" id="miTabla4">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nivel</th>
+                        <th>Tiempo para Completar</th>
+                        <th>Fecha y hora</th>
+                        <th>Mano ejercitada</th>
+
+                        <th>
+                            Operaciones
+                        </th>
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tratamientos2 in tratamiento2 %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ tratamientos2.nivel }}</td>
+                        <td>{{ tratamientos2.hora }}</td>
+                        <td>{{ tratamientos2.fechapunto }}</td>
+                        <td>{{ tratamientos2.mano }}</td>
+
+                        <td>
+                            <a href="#" class="btn btn-danger btn-delete"
+                                onclick="confirmarEliminacion2('{{ tratamientos2.id_tratamiento2 }}')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <script>
+                                function confirmarEliminacion2(userId) {
+                                    // Mostrar una ventana de confirmación
+                                    var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                    // Si el usuario confirma, redirigir a la ruta de eliminación
+                                    if (confirmacion) {
+                                        window.location.href = "/borrar_dato2/" + userId;
+                                    }
+                                }
+                            </script>
+                        </td>
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#miTabla4').DataTable({
+                    "paging": true, // Habilita la paginación
+                    "pageLength": 10, // Establece la cantidad de registros por página
+                    "pagingType": "full_numbers"
+                });
+            });
+        </script>
     </div>
 
+    <div id="contenido5" class="contenido">
+        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
+            <h2>Lista de pacientes</h2>
 
+            <table class="table table-striped" id="miTabla5">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nivel</th>
+                        <th>Tiempo para Completar</th>
+                        <th>Fecha y hora</th>
+                        <th>Mano ejercitada</th>
+
+                        <th>
+                            Operaciones
+                        </th>
+                        <!-- Agrega más encabezados según tu estructura de datos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tratamientos3 in tratamiento3 %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ tratamientos3.nivel }}</td>
+                        <td>{{ tratamientos3.hora }}</td>
+                        <td>{{ tratamientos3.fechapunto }}</td>
+                        <td>{{ tratamientos3.mano }}</td>
+
+                        <td>
+
+
+                            <a href="#" class="btn btn-danger btn-delete"
+                                onclick="confirmarEliminacion3('{{ tratamientos3.id_tratamiento3 }}')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <script>
+                                function confirmarEliminacion3(userId) {
+                                    // Mostrar una ventana de confirmación
+                                    var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                    // Si el usuario confirma, redirigir a la ruta de eliminación
+                                    if (confirmacion) {
+                                        window.location.href = "/borrardato3/" + userId;
+                                    }
+                                }
+                            </script>
+                        </td>
+                        <!-- Agrega más campos según tu estructura de datos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#miTabla5').DataTable({
+                    "paging": true, // Habilita la paginación
+                    "pageLength": 10, // Establece la cantidad de registros por página
+                    "pagingType": "full_numbers"
+                });
+            });
+        </script>
+    </div>
     <script>
         function mostrarContenido(idContenido) {
             // Ocultar todos los contenidos

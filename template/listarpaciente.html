@@ -161,8 +161,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="/borrarpaciente/{{paciente.id_paciente}}"
-                                            class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></a>
+
+                                        <a href="#" class="btn btn-danger btn-delete"
+                                            onclick="confirmarEliminacion('{{ paciente.id_paciente }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <script>
+                                            function confirmarEliminacion(userId) {
+                                                // Mostrar una ventana de confirmación
+                                                var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+
+                                                // Si el usuario confirma, redirigir a la ruta de eliminación
+                                                if (confirmacion) {
+                                                    window.location.href = "/borrarpaciente/" + userId;
+                                                }
+                                            }
+                                        </script>
                                     </td>
                                     <!-- Agrega más campos según tu estructura de datos -->
                                 </tr>

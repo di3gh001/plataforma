@@ -15,11 +15,19 @@
     <div class="cabeza">
         <header>
 
-            <h1>Bienvenid@, {{session['nombre']}}</h1>
-
-
+            <h1>Bienvenid@, {{session['nombre']}} {{session['apellido']}}</h1>
 
             <ul class="nav nav-pills nav-fill">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading">{{ message }}</h4>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
                 <li class="nav-item">
 
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modaleditar">
@@ -136,24 +144,24 @@
                         <th>Cedula de Identidad</th>
                         <th>Profesion</th>
                         <th>Fecha de nacimiento</th>
-
-                        <!-- Agrega más encabezados según tu estructura de datos -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for paciente in pacientes %}
-                    <tr data-id="{{ paciente.cedulapac }}">
+                    <tr>
                         <td>{{ loop.index }}</td>
                         <td>{{ paciente.nombres }}</td>
                         <td>{{ paciente.apellidos }}</td>
+                        <td>{{ paciente.correo }}</td>
+                        <td>{{ paciente.contraseña }}</td>
                         <td>{{ paciente.cedulapac }}</td>
+                        <td>{{ paciente.profesion }}</td>
                         <td>{{ paciente.fechanacpc }}</td>
-
-                        <!-- Agrega más campos según tu estructura de datos -->
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
         </div>
 
     </div>

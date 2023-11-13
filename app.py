@@ -4,25 +4,26 @@ from flask_mysqldb import MySQL
 
 from flask import jsonify
 import json
+import traceback
 
 # Creación de la aplicación Flask
 app = Flask(__name__, template_folder='template')
 app.secret_key = "diego"
 
 # Configuración de la base de datos MySQL
-app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'Di3gh003'
-app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
-app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_HOST'] = 'Di3gh003.mysql.pythonanywhere-services.com'
+# app.config['MYSQL_USER'] = 'Di3gh003'
+# app.config['MYSQL_PASSWORD'] = '6482865Cbbab'
+# app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# mysql = MySQL(app)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = ''
-#app.config['MYSQL_DB'] = 'plataforma'
-#app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-#mysql = MySQL(app)
 
 
 @app.route('/')
@@ -118,6 +119,41 @@ def crear_registro():
     # Mostrar mensaje de éxito
     flash('Usuario registrado exitosamente')
     return render_template("index.html", mensaje2="Usuario registrado exitosamente")
+
+
+@app.route('/crear-registrotec', methods=["POST"])
+def crear_registrotec():
+    # Obtener datos del formulario
+    correo = request.form['txtCorreo']
+    password = request.form['txtPassword']
+    nombre = request.form['txtnombre']
+    apellido = request.form['txtapellido']
+    fechanac = request.form['txtfechanac']
+    cedula = request.form['txtcedula']
+    profesion = request.form['txtprofesion']
+    telefono = request.form['txttelefono']
+
+    # Conexión a la base de datos y ejecución de la verificación
+    cur = mysql.connection.cursor()
+
+    # Verificar si el correo ya está registrado
+    cur.execute("SELECT * FROM usuarios WHERE usuario = %s", (correo,))
+    usuario_existente = cur.fetchone()
+
+    if usuario_existente:
+        # Si el correo ya está registrado, mostrar mensaje de error
+        flash('Correo electrónico ya registrado. Por favor, utiliza otro correo.')
+        return redirect(url_for('tecnico'))
+
+    # Si el correo no está registrado, realizar la inserción
+    cur.execute(
+        "INSERT INTO usuarios (usuario, contraseña, nombre, apellido, fechanac, cedula, profesion,telefono, id_rol) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, '2')",
+        (correo, password, nombre, apellido, fechanac, cedula, profesion, telefono))
+    mysql.connection.commit()
+
+    # Mostrar mensaje de éxito
+    flash('Usuario registrado exitosamente')
+    return redirect(url_for('tecnico'))
 
 
 @app.route('/crear-registroadm', methods=["POST"])
@@ -221,6 +257,38 @@ def update_pac(id_paciente):
     return redirect(url_for('listarpaciente'))
 
 
+@app.route('/updatepactec/<id_paciente>', methods=['POST'])
+def update_pactec(id_paciente):
+    if request.method == 'POST':
+        nombres = request.form['txtnombrepac']
+
+        apellidos = request.form['txtapellidopac']
+
+        cedulapac = request.form['txtcedulapac']
+
+        fechanacpac = request.form['txtfechanacpac']
+
+        operador = request.form['operador']
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        UPDATE paciente
+        SET     nombres = %s,
+                apellidos = %s,
+                
+      
+                cedulapac = %s,
+                
+                fechanacpc = %s,
+                id=%s
+                
+        WHERE id_paciente = %s
+    """, (nombres, apellidos, cedulapac, fechanacpac, operador, id_paciente))
+    mysql.connection.commit()
+    flash('Actualización Exitosa!')
+
+    return redirect(url_for('tecnico'))
+
 # lista de operadores
 
 
@@ -301,6 +369,15 @@ def borraroperador(id):
     return redirect(url_for('listar'))
 
 
+@app.route('/borraroperadortec/<string:id>')
+def borraroperadortec(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM usuarios WHERE id ={0}'.format(id))
+    mysql.connection.commit()
+    flash('Contacto Eliminado')
+    return redirect(url_for('tecnico'))
+
+
 @app.route('/borrarpaciente/<string:id_paciente>')
 def borrarpaciente(id_paciente):
     cur = mysql.connection.cursor()
@@ -311,13 +388,45 @@ def borrarpaciente(id_paciente):
     return redirect(url_for('listarpaciente'))
 
 
-@app.route('/borraroperadortec/<string:id>')
-def borraroperadortec(id):
+@app.route('/borrarpacientetec/<string:id_paciente>')
+def borrarpacientetec(id_paciente):
     cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM usuarios WHERE id ={0}'.format(id))
+    cur.execute(
+        'DELETE FROM paciente WHERE id_paciente ={0}'.format(id_paciente))
     mysql.connection.commit()
     flash('Contacto Eliminado')
     return redirect(url_for('tecnico'))
+
+
+@app.route('/borrardato/<string:id_tratamiento>', methods=["GET", "POST"])
+def borrardato(id_tratamiento):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM tratamiento WHERE id_tratamiento = %s',
+                (id_tratamiento,))
+    mysql.connection.commit()
+    flash('Contacto Eliminado')
+    return redirect(url_for('tecnico'))
+
+
+@app.route('/borrar_dato2/<string:id_tratamiento2>', methods=["GET", "POST"])
+def borrar_dato2(id_tratamiento2):
+    cur = mysql.connection.cursor()
+    cur.execute(
+        'DELETE FROM tratamiento2 WHERE id_tratamiento2 = %s', (id_tratamiento2,))
+    mysql.connection.commit()
+    flash('Contacto Eliminado')
+    return redirect(url_for('tecnico'))
+
+
+@app.route('/borrardato3/<string:id_tratamiento3>', methods=["GET", "POST"])
+def borrardato3(id_tratamiento3):
+    cur = mysql.connection.cursor()
+    cur.execute(
+        'DELETE FROM tratamiento3 WHERE id_tratamiento3 = %s', (id_tratamiento3,))
+    mysql.connection.commit()
+    flash('Contacto Eliminado')
+    return redirect(url_for('tecnico'))
+
 
 # --------------------------------------------------OPERADOR--------------------------------------------------
 
@@ -329,35 +438,54 @@ def page_not_found(e):
 
 @app.route('/usuario')
 def usuario():
-    if 'logueado' in session and session['id_rol'] == 2:
+    if 'logueado' in session and session['id_rol'] == 2 and session['id']:
         pacientes = LISTAPAC()
         return render_template('usuario.html', pacientes=pacientes)
     return render_template('index.html')
 
 
+#@app.errorhandler(Exception)
+#def handle_error(e):
+ #   ruta = request.path
+  #  mensaje = traceback.format_exc()
+
+    # Insertar el error en la base de datos
+   # try:
+    #    with app.app_context():
+     #       cur = mysql.connection.cursor()
+      #      cur.execute(
+       #         "INSERT INTO errores (ruta, mensaje) VALUES (%s, %s)", (ruta, mensaje))
+        #    mysql.connection.commit()
+    #except Exception as db_error:
+     #   print(f"Error al insertar en la base de datos: {db_error}")
+
+    #return render_template('error.html', error=e), 500
+
+
 @app.route('/agregarpac', methods=["POST"])
 def agregarpac():
-    # Obtener datos del formulario
-
     nombrepac = request.form['txtnombrepac']
     apellidopac = request.form['txtapellidopac']
     cedulapac = request.form['txtcedulapac']
     fechanacpac = request.form['txtfechanacpac']
+    operador= session['id']
 
-    id = session['id']
-    nombreop = session['nombre']
+    # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM paciente WHERE cedulapac = %s", (cedulapac,))
+    paciente_existente = cur.fetchone()
 
-    if nombrepac and apellidopac and fechanacpac and cedulapac and id:
-        # Conexión a la base de datos y ejecución de la inserción
-        cur = mysql.connection.cursor()
+    if paciente_existente:
+        flash('El paciente ya existe')
+    else:
+        # El paciente no existe, entonces se agrega a la base de datos
         sql = "INSERT INTO paciente (nombres, apellidos, cedulapac, fechanacpc, id) VALUES (%s, %s, %s, %s, %s )"
-        data = (nombrepac, apellidopac, cedulapac, fechanacpac, id)
+        data = (nombrepac, apellidopac, cedulapac, fechanacpac,operador)
         cur.execute(sql, data)
         mysql.connection.commit()
+        flash('Paciente Agregado Exitosamente')
 
-    # Mostrar mensaje de éxito
-    flash('Paciente Agregado Exitosamente')
-    return redirect(url_for('usuario', mensaje2="Paciente Registrado Exitosamente"))
+    return redirect(url_for('usuario'))
 
 
 @app.route('/accesopac', methods=["POST", "GET"])
@@ -427,7 +555,8 @@ def LISTAPAC():
 
     # Consulta a la base de datos para obtener una lista de usuarios con id_rol igual a 1
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM paciente WHERE id_paciente")
+    cur.execute(
+        "SELECT paciente.*, usuarios.nombre AS nombre_usuario FROM paciente LEFT JOIN usuarios ON paciente.id = usuarios.id")
     listapacient = cur.fetchall()
 
     cur.close()
@@ -446,6 +575,45 @@ def listatrat():
     cur.close()
 
     return listatratamiento
+
+
+@app.route('/listatrat2', methods=["GET"])
+def listatrat2():
+
+    # Consulta a la base de datos para obtener una lista de usuarios con id_rol igual a 1
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM tratamiento2 WHERE id_tratamiento2")
+    listatratamiento2 = cur.fetchall()
+
+    cur.close()
+
+    return listatratamiento2
+
+
+@app.route('/listatrat3', methods=["GET"])
+def listatrat3():
+
+    # Consulta a la base de datos para obtener una lista de usuarios con id_rol igual a 1
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM tratamiento3 WHERE id_tratamiento3")
+    listatratamiento3 = cur.fetchall()
+
+    cur.close()
+
+    return listatratamiento3
+
+
+@app.route('/listarerror', methods=["GET"])
+def listarerror():
+
+    # Consulta a la base de datos para obtener una lista de usuarios con id_rol igual a 1
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM errores WHERE id_error")
+    listarerror = cur.fetchall()
+
+    cur.close()
+
+    return listarerror
 
 
 @app.route('/listarop', methods=["GET", "POST"])
@@ -473,22 +641,13 @@ def tecnico():
         pacientes = LISTAPAC()
         operadores = listarop()
         tratamiento = listatrat()
+        tratamiento2 = listatrat2()
+        tratamiento3 = listatrat3()
+        error = listarerror()
 
     # Renderizar la página 'listar.html' con la lista de usuarios
-        return render_template('tecnico.html', pacientes=pacientes, operadores=operadores, tratamiento=tratamiento)
+        return render_template('tecnico.html', pacientes=pacientes, operadores=operadores, tratamiento=tratamiento, tratamiento2=tratamiento2, tratamiento3=tratamiento3, error=error)
     return render_template('index.html')
-
-
-@app.route('/buscartecnico', methods=["POST", "GET"])
-def buscartecnico():
-    termino_busquedapac = request.form['nombrepac']
-
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM paciente WHERE nombres LIKE %s OR cedulapac = %s OR apellidos LIKE %s",
-                ('%' + termino_busquedapac + '%', termino_busquedapac, '%' + termino_busquedapac + '%'))
-
-    listapac = cur.fetchall()
-    return render_template('tecnico.html', listapac=listapac)
 
 
 @app.route('/registrotec', methods=["POST"])
@@ -538,7 +697,7 @@ def agregarpactec():
         mysql.connection.commit()
         flash('Paciente Agregado Exitosamente')
 
-    return redirect(url_for('tecnico', mensaje2="Paciente Registrado Exitosamente"))
+    return redirect(url_for('tecnico'))
 
 
 @app.route('/updatetec/<id>', methods=['POST'])
