@@ -20,7 +20,7 @@ export class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'static/img/fondoraton.jpg');
+        this.load.image('background', 'static/img/fondoratongato.jpg');
         this.load.image('gameover', 'static/img/gameover.png');
         this.load.image('raton', 'static/img/raton.png');
         this.load.image('gato', 'static/img/gato.png');
@@ -28,7 +28,8 @@ export class Game extends Phaser.Scene {
 
     create() {
 
-        this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo=this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo.setScale(2.5, 2);
         this.gameoverImage = this.add.image(100, 90, 'gameover');
         this.gameoverImage.visible = false;
 

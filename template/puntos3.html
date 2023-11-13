@@ -7,42 +7,69 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Punto</title>
+    <style>
+        body {
+            background-image: url('static/img/Guardardatos.png');
+            /* Reemplaza 'ruta_de_tu_imagen.jpg' con la ruta real de tu imagen */
+            background-size: 100% 100%;
+            /* Ajusta el tamaño de la imagen al 100% de la altura y la anchura del cuerpo */
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .volver-btn {
+            position: fixed;
+            /* Establece la posición fija para que el botón se mantenga en su lugar al desplazarse */
+            top: 10px;
+            /* Ajusta la distancia desde la parte superior */
+            left: 90%;
+            /* Ajusta la distancia desde la izquierda */
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>puntos JUEGO 3</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for messages in messages%}
+    <div class="container text-center">
+        <div class="row align-items-start">
 
-    <div class="alert alert-dismissible alert-danger" xt-marked="ok">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
-        <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+            <div class="col">
+                <h1>puntos JUEGO 3</h1>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for messages in messages%}
+
+                <div class="alert alert-dismissible alert-danger" xt-marked="ok">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading" xt-marked="ok">{{mensaje}}</h4>
+                    <h4 class="alert-heading" xt-marked="ok">{{mensaje2}}</h4>
+                </div>
+
+
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <form action="/enviarpuntos3" method="post">
+                    <p>PUNTOS</p>
+                    <input type="text" class="form-control" placeholder="nombre" name="txtpuntos"
+                        value="{{ minutos }}:{{ segundos }} " readonly /><br>
+                    <input type="text" class="form-control" placeholder="MANO EJERCITADA" name="txtmano"
+                        value="{{ texto_adicional }}" readonly /><br>
+                    <select name="txtnivel" class="form-control">
+                        <option value="AVANZADO">AVANZADO</option>
+                        <option value="MEDIO">MEDIO</option>
+                        <option value="LEVE">LEVE</option>
+                    </select><br>
+
+                    <button type="submit" class="btn btn-warning">enviar</button>
+                    <a href="{{ url_for('plantillajuegos') }}" class="btn btn-danger volver-btn">Cancelar</a>
+
+                </form>
+            </div>
+
+        </div>
     </div>
 
-
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <form action="/enviarpuntos3" method="post">
-        <p>PUNTOS</p>
-        <input type="text" class="form-control" placeholder="nombre" name="txtpuntos"
-            value="{{ minutos }}:{{ segundos }} " /><br>
-        <input type="text" class="form-control" placeholder="MANO EJERCITADA" name="txtmano"
-            value="{{ texto_adicional }}" /><br>
-        <select name="txtnivel" class="form-control">
-            <option value="AVANZADO">AVANZADO</option>
-            <option value="MEDIO">MEDIO</option>
-            <option value="LEVE">LEVE</option>
-        </select><br>
-
-
-
-        <button type="submit" class="btn btn-outline-success">enviar</button>
-
-    </form>
 </body>
 
 </html>

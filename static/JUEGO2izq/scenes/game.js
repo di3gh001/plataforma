@@ -19,7 +19,7 @@ export class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'static/img/fondo2.jpg');
+        this.load.image('background', 'static/img/fondonivel2.png');
         this.load.image('dona', 'static/img/pelota.png');
         this.load.image('rectangulo', 'static/img/equals.png');
         this.load.image('crate32', 'static/img/equals.png');
@@ -27,7 +27,8 @@ export class Game extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo =this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo.setScale(2.5, 2);
         this.plataforma = this.physics.add.image(700, 450, 'plataforma').setImmovable();
         this.plataforma.body.allowGravity = false;
         this.plataforma.setScale(5, 1);
@@ -54,7 +55,7 @@ export class Game extends Phaser.Scene {
         this.physics.add.collider(this.rectangulosGroup, this.plataforma);
 
         // Texto para mostrar el número de rectángulos
-        this.textoNumRectangulos = this.add.text(16, 16, 'Número de rectángulos: ' + this.rectangulosGroup.getLength(), { fontSize: '24px', fill: '#fff' });
+        this.textoNumRectangulos = this.add.text(16, 16, 'Número de Bloques: ' + this.rectangulosGroup.getLength(), { fontSize: '24px', fill: '#fff' });
 
         // Texto para mostrar el tiempo
         this.textoTiempo = this.add.text(game.config.width - 300, 16, 'Tiempo: ' + this.tiempo.minutos + ':' + this.tiempo.segundos, { fontSize: '24px', fill: '#fff' });

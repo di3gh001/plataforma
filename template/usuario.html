@@ -23,7 +23,10 @@
 </head>
 
 <body class="bg-secondary bg-gradient ">
-    <a>BIENVENID@, {{session['nombre']}} {{session['apellido']}}</a>
+    <h1>
+        BIENVENID@, {{session['nombre']}} {{session['apellido']}}
+    </h1>
+
     <nav class="navbar navbar-expand-lg bg-secondary bg-gradient text-white">
 
         <div class="container-fluid">
@@ -60,14 +63,14 @@
                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-danger">
+                                    <div class="modal-header bg-dark bg-gradient">
                                         <h1 class="modal-title fs-5" id="modaleditar">
                                             PERFIL DE OPERADOR
                                         </h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body bg-danger">
+                                    <div class="modal-body bg-dark bg-gradient">
                                         <!-- Botón de Ingresar -->
 
                                         <form>
@@ -133,7 +136,7 @@
 
                                             <p>Fecha de Nacimiento</p>
                                             <input type="date" class="form-control" placeholder="Fecha"
-                                                name="txtfechanacpac" min="1950-01-01" max="2000-01-01" /><br>
+                                                name="txtfechanacpac" min="1950-01-01" max="2020-01-01" /><br>
                                             <button type="submit" class="btn btn-outline-success">AGREGAR
                                                 PACIENTE</button>
 
@@ -184,8 +187,9 @@
                             alt="Responsive image">
 
                         <div class="carousel-caption d-none d-md-block text-white">
-                            <h5>Second slide label</h5>
-                            <p>Some representative placeholder content for the second slide.</p>
+                            <h1>EJERCICIO 2</h1>
+                            <h2>Juegos que implican la planificación de movimientos y la toma de decisiones pueden
+                                proporcionar una valiosa estimulación cognitiva.</h2>
                         </div>
                     </div>
                     <div class="carousel-item">
@@ -193,8 +197,9 @@
                             alt="Responsive image">
 
                         <div class="carousel-caption d-none d-md-block text-white">
-                            <h1>Third slide label</h1>
-                            <p>Some representative placeholder content for the third slide.</p>
+                            <h1>EJERCICIO 3</h1>
+                            <h2>La IA puede ajustar dinámicamente el nivel de dificultad del juego en función de las
+                                habilidades y capacidades del paciente</h2>
                         </div>
                     </div>
                 </div>

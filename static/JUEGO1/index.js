@@ -7,7 +7,7 @@ import { Felicidades } from './scenes/felicidades.js';
 const config = {
     type: Phaser.AUTO,
     width: 1200,
-    height: 600,
+    height: 500,
     scene: [ Game, Felicidades],
     backgroundColor: 'black',
     parent: 'Juego_atrapa',

@@ -21,17 +21,17 @@ export class Game extends Phaser.Scene {
 
     preload() {
         this.load.image('background', 'static/img/fondo1.jpg');
-        this.load.image('dona', 'static/img/ballx.png');
+        this.load.image('dona', 'static/img/mosquito.png');
         this.load.image('caja', 'static/img/equals.png');
-        this.load.image('piso', 'static/img/platform.png');
+        this.load.image('piso', 'static/img/mesabien.png');
 
     }
 
     create() {
         this.add.image(game.config.width / 2, game.config.height / 2, 'background');
-        this.plataforma = this.physics.add.image(700, 300, 'piso').setImmovable();
+        this.plataforma = this.physics.add.image(650, 500, 'piso').setImmovable();
         this.plataforma.body.allowGravity = false;
-        this.plataforma.setScale(8, 1);
+        this.plataforma.setScale(1, 0.5);
 
         this.caja = this.physics.add.image(500, 100, 'caja');
         this.caja.body.allowGravity = true;
