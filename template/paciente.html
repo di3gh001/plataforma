@@ -4,97 +4,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PACIENTE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/css/paciente.css">
-    <title>PACIENTE</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #contenido1 {
+            background: linear-gradient(to bottom, rgb(175, 131, 131), rgb(134, 134, 218));
+            /* Puedes ajustar la dirección y los colores según tus preferencias */
+            /* background: linear-gradient(to bottom, red, blue); para un degradado vertical */
+            /* background: linear-gradient(45deg, red, blue); para un degradado diagonal */
+            /* Ajusta los colores según tus necesidades */
+            /* Puedes agregar más propiedades CSS según sea necesario */
+            padding: 20px;
+            /* Añade un relleno para que el texto no esté pegado al borde */
+        }
+
+        #contenido1 miDiv {
+            width: 10%;
+            height: 10%;
+            position: fixed;
+            /* El elemento se posicionará de forma fija en la ventana del navegador */
+            top: 0;
+            /* Alinea el elemento en la parte superior */
+            right: 0;
+            /* Alinea el elemento en el lado derecho */
+            background-color: rgba(255, 0, 0, 0.5);
+            /* Color de fondo con opacidad */
+            /* Puedes ajustar las propiedades según tus necesidades */
+        }
+    </style>
 </head>
 
-<body>
+<body id="contanedor">
     <audio id="musica1" loop autoplay>
         <source src="/static/music/musicaniño.mp3" type="audio/mpeg">
         <source src="/static/music/musicaniño.ogv" type="audio/ogg">
-        Tu navegador no es compatible con la reproducción de audio.
+
     </audio>
 
     <header>
-        <H1> bienvenido {{session['nombrepac']}}</H1>
-        <ul class="nav nav-tabs">
+        <H1> Bienvenid@ {{session['nombrepac']}}</H1>
+        <ul class="nav nav-tabs bg-dark bg-gradient text-emphasis-secondary">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" onclick="mostrarContenido('contenido1')">pagina
-                    1</a>
+                <a class="nav-link" aria-current="page" href="#" onclick="mostrarContenido('contenido1')">INICIO</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" onclick="mostrarContenido('contenido2')">pagina 2</a>
+                <a class="nav-link" href="#" onclick="mostrarContenido('contenido2')">ESTADISTICAS JUEGO 1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">pagina 3</a>
+                <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">ESTADISTICAS JUEGO 2</a>
             </li>
-            <button onclick="goBack()">Volver</button>
-            <script>
-                function goBack() {
-                    // Utiliza el objeto history para ir a la pantalla anterior
-                    window.history.back();
-                }
-            </script>
             <li class="nav-item">
-                <a class="dropdown-item menuperfil cerrar" href="/logout">
-                    <i class="fas fa-sign-out-alt m-1"></i>Salir
+                <a class="nav-link" href="#" onclick="mostrarContenido('contenido4')">ESTADISTICAS JUEGO 3</a>
+            </li>
+            <a href="{{ url_for('usuario') }}" class="btn btn-primary">Volver</a>
+            <li class="nav-item">
+                <a class=" menuperfil cerrar" href="/logout">
+                    <i class="btn btn-outline-danger">Salir<i class="bi bi-box-arrow-right"></i></i>
                 </a>
             </li>
         </ul>
+
         <div id="contenido1">
+            <div id="miDiv">
 
-            <form class="d-flex" action="/plantillajuegos" method="post">
-                <button class="btn btn-outline-secondary" type="submit">EMPIEZA A JUGAR</button>
-            </form>
-
-
-        </div>
-        <div id="contenido2" style="display:none;">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div id="contenido3" style="display:none;">
+            </div>
             <div class="container text-center">
                 <div class="row">
                     <div class="col align-self-start">
-                        One of three columns
+                        <img src="static/img/log.png" class="d-block w-100" alt="Descripción de la imagen">
+                        <H2>AQUI COMIENZA TODO CON MOTION THERAPY!</H2><br>
+
                     </div>
                     <div class="col align-self-center">
-                        One of three columns
+                        <br><br>
+                        <img src="static/img/imagenia.png" class="d-block w-100" alt="Descripción de la imagen">
+
+                        <h1></h1>
+                        <br><br><br><br>
                     </div>
+                    <br>
                     <div class="col align-self-end">
-                        One of three columns
+                        <h2>Nuestros juegos responden a los movimientos y decisiones, creando una experiencia de juego
+                            inmersiva que se siente natural y motivadora.
+
+                        </h2>
+                        <br><br><br><br>
+
+                        <form class="d-flex" action="/plantillajuegos" method="post">
+                            <button class="btn btn-warning" type="submit">¡Comencemos la aventura!</button>
+                        </form>
+                        <br>
                     </div>
                 </div>
+            </div>
+
+
+        </div>
+
+        <div id="contenido2" style="display:none;">
+            <div class="container text-center">
+                <h2>Registro de Tratamiento 1</h2>
+                <table class="table table-striped" id="miTabla1">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Nivel</th>
+                            <th>Tiempo para Completar</th>
+                            <th>Fecha y hora</th>
+                            <th>Mano ejercitada</th>
+
+                            <!-- Agrega más encabezados según tu estructura de datos -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tratamientos in tratamiento %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ tratamientos.nivel }}</td>
+                            <td>{{ tratamientos.hora }}</td>
+                            <td>{{ tratamientos.fechapunto }}</td>
+                            <td>{{ tratamientos.mano }}</td>
+
+
+                            <!-- Agrega más campos según tu estructura de datos -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <script>
+                    $(document).ready(function () {
+                        $('#miTabla1').DataTable({
+                            "paging": true, // Habilita la paginación
+                            "pageLength": 10, // Establece la cantidad de registros por página
+                            "pagingType": "full_numbers"
+                        });
+                    });
+                </script>
+
+            </div>
+        </div>
+        <div id="contenido3" style="display:none;">
+            <div class="container text-center">
+                <h2>Registro de Tratamiento 2</h2>
+                <table class="table table-striped" id="miTabla2">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Nivel</th>
+                            <th>Tiempo para Completar</th>
+                            <th>Fecha y hora</th>
+                            <th>Mano ejercitada</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tratamientos2 in tratamiento2 %}
+                        <tr data-nivel="{{ loop.index }}" data-hora="{{ tratamientos2.hora }}">
+                            <td>{{ loop.index }}</td>
+                            <td>{{ tratamientos2.nivel }}</td>
+                            <td>{{ tratamientos2.hora }}</td>
+                            <td>{{ tratamientos2.fechapunto }}</td>
+                            <td>{{ tratamientos2.mano }}</td>
+
+                            <!-- Agrega más campos según tu estructura de datos -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+
+                <script>
+                    $(document).ready(function () {
+                        $('#miTabla2').DataTable({
+                            "paging": true, // Habilita la paginación
+                            "pageLength": 10, // Establece la cantidad de registros por página
+                            "pagingType": "full_numbers"
+                        });
+                    });
+                </script>
+            </div>
+
+        </div>
+
+        <div id="contenido4" style="display:none;">
+            <div class="container text-center">
+                <h2>Registro de Tratamiento 3</h2>
+                <table class="table table-striped" id="miTabla3">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Nivel</th>
+                            <th>Tiempo para Completar</th>
+                            <th>Fecha y hora</th>
+                            <th>Mano ejercitada</th>
+
+
+                            <!-- Agrega más encabezados según tu estructura de datos -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tratamientos3 in tratamiento3 %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ tratamientos3.nivel }}</td>
+                            <td>{{ tratamientos3.hora }}</td>
+                            <td>{{ tratamientos3.fechapunto }}</td>
+                            <td>{{ tratamientos3.mano }}</td>
+
+                            <!-- Agrega más campos según tu estructura de datos -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <script>
+                    $(document).ready(function () {
+                        $('#miTabla3').DataTable({
+                            "paging": true, // Habilita la paginación
+                            "pageLength": 10, // Establece la cantidad de registros por página
+                            "pagingType": "full_numbers"
+                        });
+                    });
+                </script>
             </div>
         </div>
 

@@ -436,34 +436,6 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/usuario')
-def usuario():
-    if 'logueado' in session and session['id_rol'] == 2 and session.get('id'):
-        pacientes = LISTAPAC()
-        return render_template('usuario.html', pacientes=pacientes)
-    else:
-        flash('Debes iniciar sesión como usuario con el rol correcto', 'danger')
-        return redirect(url_for('acceso-login'))
-
-
-@app.errorhandler(Exception)
-def handle_error(e):
-    ruta = request.path
-    mensaje = traceback.format_exc()
-
-    # Insertar el error en la base de datos
-    try:
-        with app.app_context():
-            cur = mysql.connection.cursor()
-            cur.execute(
-                "INSERT INTO errores (ruta, mensaje) VALUES (%s, %s)", (ruta, mensaje))
-            mysql.connection.commit()
-    except Exception as db_error:
-        print(f"Error al insertar en la base de datos: {db_error}")
-
-    return render_template('error.html', error=e), 500
-
-
 @app.route('/agregarpac', methods=["POST"])
 def agregarpac():
     nombrepac = request.form['txtnombrepac']
@@ -536,12 +508,32 @@ def paciente():
     if 'logueado' in session:
         cedulapac = session.get('cedulapac')
         if cedulapac:
+            tratamiento = listatratpac()
+            tratamiento2 = listatratpac2()
+            tratamiento3 = listatratpac3()
             # Aquí puedes usar cedula_paciente para referenciar al paciente
-            return render_template('paciente.html')
+            return render_template('paciente.html', tratamiento=tratamiento, tratamiento2=tratamiento2, tratamiento3=tratamiento3)
         else:
             flash('No se ha seleccionado un paciente', 'danger')
             return redirect(url_for('usuario'))
-    return render_template('index.html')
+    return render_template('index.htmtapac2l')
+
+
+@app.route('/usuario')
+def usuario():
+    if 'logueado' in session and 'id' in session:
+        id_operador = session['id']
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT * FROM paciente WHERE id = %s", (id_operador,))
+        listapacient = cur.fetchall()
+        cur.close()
+
+        # Renderiza la plantilla con la lista de pacientes
+        return render_template('usuario.html', pacientes=listapacient)
+
+    # Si no está logueado, redirige a la página de inicio
+    return redirect(url_for('pagina_de_inicio'))
 
 
 @app.route('/listarpaciente', methods=["GET"])
@@ -573,6 +565,84 @@ def LISTAPAC():
     cur.close()
 
     return listapacient
+
+
+@app.route('/LISTAPAC2', methods=["GET", "POST"])
+def LISTAPAC2():
+
+    if 'logueado' in session and 'id' in session:
+        id_operador = session['id']
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT * FROM paciente WHERE id = %s", (id_operador,))
+        listapacient = cur.fetchall()
+        cur.close()
+
+        # Renderiza la plantilla con la lista de pacientes
+        return listapacient
+
+    # Si no está logueado, redirige a la página de inicio
+    return redirect(url_for('pagina_de_inicio'))
+
+
+@app.route('/listatratpac', methods=["GET"])
+def listatratpac():
+    # Verifica si hay una sesión activa y si hay un id_paciente en la sesión
+    if 'logueado' in session and 'id_paciente' in session:
+        id_paciente = session['id_paciente']
+
+        # Consulta a la base de datos para obtener una lista de tratamientos para el paciente actual
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT * FROM tratamiento WHERE id_paciente = %s", (id_paciente,))
+        listatratamiento = cur.fetchall()
+        cur.close()
+
+        # Renderiza la plantilla con la lista de tratamientos
+        return listatratamiento
+
+    # Si no hay sesión o no hay id_paciente en la sesión, redirige a alguna página de manejo de errores o inicio
+    return redirect(url_for('pagina_de_inicio'))
+
+
+@app.route('/listatratpac2', methods=["GET"])
+def listatratpac2():
+    # Verifica si hay una sesión activa y si hay un id_paciente en la sesión
+    if 'logueado' in session and 'id_paciente' in session:
+        id_paciente = session['id_paciente']
+
+        # Consulta a la base de datos para obtener una lista de tratamientos para el paciente actual
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT * FROM tratamiento2 WHERE id_paciente = %s", (id_paciente,))
+        listatratamiento = cur.fetchall()
+        cur.close()
+
+        # Renderiza la plantilla con la lista de tratamientos
+        return listatratamiento
+
+    # Si no hay sesión o no hay id_paciente en la sesión, redirige a alguna página de manejo de errores o inicio
+    return redirect(url_for('pagina_de_inicio'))
+
+
+@app.route('/listatratpac3', methods=["GET"])
+def listatratpac3():
+    # Verifica si hay una sesión activa y si hay un id_paciente en la sesión
+    if 'logueado' in session and 'id_paciente' in session:
+        id_paciente = session['id_paciente']
+
+        # Consulta a la base de datos para obtener una lista de tratamientos para el paciente actual
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT * FROM tratamiento3 WHERE id_paciente = %s", (id_paciente,))
+        listatratamiento = cur.fetchall()
+        cur.close()
+
+        # Renderiza la plantilla con la lista de tratamientos
+        return listatratamiento
+
+    # Si no hay sesión o no hay id_paciente en la sesión, redirige a alguna página de manejo de errores o inicio
+    return redirect(url_for('pagina_de_inicio'))
 
 
 @app.route('/listatrat', methods=["GET"])
@@ -897,63 +967,92 @@ def puntos3():
 
 @app.route('/enviarpuntos', methods=['POST', 'GET'])
 def enviarpuntos():
-
+    # Obtener datos del formulario y la sesión
     puntos = request.form['txtpuntos']
-    pacienteid = session['id_paciente']
     nivel = request.form['txtnivel']
     mano = request.form['txtmano']
+    paciente_id = session.get('id_paciente')
 
-    # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
+    # Verificar si hay un paciente en sesión
+    if paciente_id is None:
+        flash('No se ha seleccionado un paciente', 'danger')
+        return redirect(url_for('pagina_de_inicio'))
+
+    # Insertar datos en la tabla de tratamiento
     cur = mysql.connection.cursor()
+    sql = "INSERT INTO tratamiento (nivel, hora, mano, id_paciente) VALUES (%s, %s, %s, %s)"
+    data = (nivel, puntos, mano, paciente_id)
 
-    # El paciente no existe, entonces se agrega a la base de datos
-    sql = "INSERT INTO tratamiento (nivel, hora,mano, id_paciente) VALUES ( %s,%s, %s, %s )"
-    data = (nivel, puntos, mano, pacienteid)
-    cur.execute(sql, data)
-    mysql.connection.commit()
-    flash('tiempo agregado')
+    try:
+        cur.execute(sql, data)
+        mysql.connection.commit()
+        flash('Puntos agregados correctamente')
+    except Exception as e:
+        flash(f'Error al agregar puntos: {str(e)}', 'danger')
+    finally:
+        cur.close()
 
-    return redirect(url_for('plantillajuegos', mensaje3="puntos agregados"))
+    return redirect(url_for('plantillajuegos', mensaje3='Puntos agregados'))
 
 
 @app.route('/enviarpuntos2', methods=['POST', 'GET'])
 def enviarpuntos2():
-
+    # Obtener datos del formulario y la sesión
     puntos = request.form['txtpuntos']
-    pacienteid = session['id_paciente']
     nivel = request.form['txtnivel']
     mano = request.form['txtmano']
-    # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
+    paciente_id = session.get('id_paciente')
+
+    # Verificar si hay un paciente en sesión
+    if paciente_id is None:
+        flash('No se ha seleccionado un paciente', 'danger')
+        return redirect(url_for('pagina_de_inicio'))
+
+    # Insertar datos en la tabla de tratamiento
     cur = mysql.connection.cursor()
+    sql = "INSERT INTO tratamiento2 (nivel, hora, mano, id_paciente) VALUES (%s, %s, %s, %s)"
+    data = (nivel, puntos, mano, paciente_id)
 
-    # El paciente no existe, entonces se agrega a la base de datos
-    sql = "INSERT INTO tratamiento2 (nivel, hora,mano, id_paciente) VALUES ( %s,%s, %s , %s)"
-    data = (nivel, puntos, mano, pacienteid)
-    cur.execute(sql, data)
-    mysql.connection.commit()
-    flash('tiempo agregado')
+    try:
+        cur.execute(sql, data)
+        mysql.connection.commit()
+        flash('Puntos agregados correctamente')
+    except Exception as e:
+        flash(f'Error al agregar puntos: {str(e)}', 'danger')
+    finally:
+        cur.close()
 
-    return redirect(url_for('plantillajuegos', mensaje3="puntos agregados"))
+    return redirect(url_for('plantillajuegos', mensaje3='Puntos agregados'))
 
 
 @app.route('/enviarpuntos3', methods=['POST', 'GET'])
 def enviarpuntos3():
-
+    # Obtener datos del formulario y la sesión
     puntos = request.form['txtpuntos']
-    pacienteid = session['id_paciente']
     nivel = request.form['txtnivel']
     mano = request.form['txtmano']
-    # Conexión a la base de datos y ejecución de la consulta para verificar si el paciente existe
+    paciente_id = session.get('id_paciente')
+
+    # Verificar si hay un paciente en sesión
+    if paciente_id is None:
+        flash('No se ha seleccionado un paciente', 'danger')
+        return redirect(url_for('pagina_de_inicio'))
+
+    # Insertar datos en la tabla de tratamiento
     cur = mysql.connection.cursor()
+    sql = "INSERT INTO tratamiento3 (nivel, hora, mano, id_paciente) VALUES (%s, %s, %s, %s)"
+    data = (nivel, puntos, mano, paciente_id)
 
-    # El paciente no existe, entonces se agrega a la base de datos
-    sql = "INSERT INTO tratamiento3 (nivel, hora, mano,id_paciente) VALUES ( %s,%s, %s,%s )"
-    data = (nivel, puntos, mano, pacienteid)
-    cur.execute(sql, data)
-    mysql.connection.commit()
-    flash('tiempo agregado')
+    try:
+        cur.execute(sql, data)
+        mysql.connection.commit()
+        flash('Puntos agregados correctamente')
+    except Exception as e:
+        flash(f'Error al agregar puntos: {str(e)}', 'danger')
+    finally:
+        cur.close()
 
-    return redirect(url_for('plantillajuegos', mensaje3="puntos agregados"))
+    return redirect(url_for('plantillajuegos', mensaje3='Puntos agregados'))
 
 
 # Inicio de la aplicación
