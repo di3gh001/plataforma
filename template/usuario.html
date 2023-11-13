@@ -6,175 +6,286 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>USUARIO</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-</head>
-
-<body>
-
-    <div class="cabeza">
-        <header>
-
-            <h1>Bienvenid@, {{session['nombre']}} {{session['apellido']}}</h1>
-
-            <ul class="nav nav-pills nav-fill">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-dismissible alert-success">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <h4 class="alert-heading">{{ message }}</h4>
-                </div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-                <li class="nav-item">
-
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modaleditar">
-                        PERFIL <br> DE OPERADOR
-                    </button>
-                    <div class="modal fade" id="modaleditar" tabindex="-1" aria-labelledby="modaleditar"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modaleditar">
-                                        PERFIL DE OPERADOR
-                                    </h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Botón de Ingresar -->
-
-                                    <form>
-                                        <p>Nombres</p>
-                                        <input type="text" class="form-control" placeholder="nombre" name="txtnombreop"
-                                            value="{{session['nombre']}}" readonly /><br>
-                                        <p>Apellidos</p>
-                                        <input type="text" class="form-control" placeholder="Apellidos"
-                                            name="txtapellidoop" value="{{session['apellido']}}" readonly /><br>
-                                        <p>Correo Electronico</p>
-                                        <input type="text" class="form-control" placeholder="Correo Electronico"
-                                            name="txcorreoop" value="{{session['correo']}}" readonly /><br>
-
-                                        <p>Cedula de Identidad</p>
-                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
-                                            name="txtcedulaop" value="{{session['cedula']}}" readonly /><br>
-                                        <p>Profesion</p>
-                                        <input type="text" class="form-control" placeholder="Profesion"
-                                            name="txtprofesionop" value="{{session['profesion']}}" readonly /><br>
-                                        <p>Fecha de Nacimiento</p>
-                                        <input type="date" class="form-control" placeholder="Fecha" name="txtfechanacop"
-                                            value="{{session['fechanac']}}" readonly /><br>
-
-
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalagregar">
-                        AGREGAR PACIENTE
-                    </button>
-                    <div class="modal fade" id="modalagregar" tabindex="-1" aria-labelledby="modaleditar"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modalagregar">
-                                        Registro Pacientes
-                                    </h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Botón de Ingresar -->
-
-                                    <form action="/agregarpac" method="post">
-                                        <input type="text" class="form-control" placeholder="Nombres"
-                                            name="txtnombrepac" />
-                                        <br>
-
-                                        <input type="text" class="form-control" placeholder="Apellidos"
-                                            name="txtapellidopac" /><br>
-
-                                        <input type="text" class="form-control" placeholder="Cedula de identidad"
-                                            name="txtcedulapac" />
-
-                                        <p>Fecha de Nacimiento</p>
-                                        <input type="date" class="form-control" placeholder="Fecha"
-                                            name="txtfechanacpac" /><br>
-                                        <button type="submit" class="btn btn-outline-success">AGREGAR PACIENTE</button>
-
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <form class="d-flex" role="search" action="/accesopac" method="post">
-                        <input type="text" class="form-control" placeholder="Cedula de identidad" name="txtcedulapac" />
-                        <button class="btn btn-outline-success" type="submit">BUSCAR PACIENTE</button>
-                    </form>
-                </li>
-                <li class="nav-item">
-                    <a class=" cerrar" href="/logout">
-                        Salir
-                    </a>
-                </li>
-            </ul>
-        </header>
-        <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
-            <h2>Lista de pacientes</h2>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Correo Electrónico</th>
-                        <th>Contraseña</th>
-                        <th>Cedula de Identidad</th>
-                        <th>Profesion</th>
-                        <th>Fecha de nacimiento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for paciente in pacientes %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ paciente.nombres }}</td>
-                        <td>{{ paciente.apellidos }}</td>
-                        <td>{{ paciente.correo }}</td>
-                        <td>{{ paciente.contraseña }}</td>
-                        <td>{{ paciente.cedulapac }}</td>
-                        <td>{{ paciente.profesion }}</td>
-                        <td>{{ paciente.fechanacpc }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-        </div>
-
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-bVUxdIeZP4ZmXO6FHzHG5wF/BJnA3kEAlV2JfZ+K5C6heqJwXJgvR6d88Mz02M9Q"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha384-uUo3yF7RKL4Ct2S7Elny2y4EmlnOMc5lAElZBOAM4ltdaL+m5ZHpZa6mXO8JlU1M"
-        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+    <style>
+        .fila-paciente:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-success bg-gradient text-white">
+    <a>BIENVENID@, {{session['nombre']}} {{session['apellido']}}</a>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary p-3 mb-2 bg-secondary bg-gradient text-white">
+
+        <div class="container-fluid">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <h4 class="alert-heading">{{ message }}</h4>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class=" collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#"
+                            onclick="mostrarContenido('contenido1')">INICIO</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#"
+                            onclick="mostrarContenido('contenido2')">LISTA DE PACIENTES</a>
+                    </li>
+
+                    <li class="nav-item">
+
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modaleditar">
+                            PERFIL <br> DE OPERADOR
+                        </button>
+                        <div class="modal fade " id="modaleditar" tabindex="-1" aria-labelledby="modaleditar"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h1 class="modal-title fs-5" id="modaleditar">
+                                            PERFIL DE OPERADOR
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body bg-danger">
+                                        <!-- Botón de Ingresar -->
+
+                                        <form>
+                                            <p>Nombres</p>
+                                            <input type="text" class="form-control" placeholder="nombre"
+                                                name="txtnombreop" value="{{session['nombre']}}" readonly /><br>
+                                            <p>Apellidos</p>
+                                            <input type="text" class="form-control" placeholder="Apellidos"
+                                                name="txtapellidoop" value="{{session['apellido']}}" readonly /><br>
+                                            <p>Correo Electronico</p>
+                                            <input type="text" class="form-control" placeholder="Correo Electronico"
+                                                name="txcorreoop" value="{{session['correo']}}" readonly /><br>
+
+                                            <p>Cedula de Identidad</p>
+                                            <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                                name="txtcedulaop" value="{{session['cedula']}}" readonly /><br>
+                                            <p>Profesion</p>
+                                            <input type="text" class="form-control" placeholder="Profesion"
+                                                name="txtprofesionop" value="{{session['profesion']}}" readonly /><br>
+                                            <p>Fecha de Nacimiento</p>
+                                            <input type="date" class="form-control" placeholder="Fecha"
+                                                name="txtfechanacop" value="{{session['fechanac']}}" readonly /><br>
+
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modalagregar">
+                            AGREGAR PACIENTE
+                        </button>
+                        <div class="modal fade" id="modalagregar" tabindex="-1" aria-labelledby="modaleditar"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modalagregar">
+                                            Registro Pacientes
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Botón de Ingresar -->
+
+                                        <form action="/agregarpac" method="post">
+                                            <input type="text" class="form-control" placeholder="Nombres"
+                                                name="txtnombrepac" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                title="Solo se permiten letras y espacios" />
+                                            <br>
+
+                                            <input type="text" class="form-control" placeholder="Apellidos"
+                                                name="txtapellidopac" pattern="[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+"
+                                                title="Solo se permiten letras y espacios" /><br>
+
+                                            <input type="text" class="form-control" placeholder="Cedula de identidad"
+                                                name="txtcedulapac" minlength="4" />
+
+                                            <p>Fecha de Nacimiento</p>
+                                            <input type="date" class="form-control" placeholder="Fecha"
+                                                name="txtfechanacpac" min="1950-01-01" max="2000-01-01" /><br>
+                                            <button type="submit" class="btn btn-outline-success">AGREGAR
+                                                PACIENTE</button>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <a class=" menuperfil cerrar" href="/logout">
+                    <i class="btn btn-outline-danger">Salir<i class="bi bi-box-arrow-right"></i></i>
+                </a>
+
+
+            </div>
+
+        </div>
+    </nav>
+    <div id="contenido1" class="contenido">
+
+        <div class="p-3 mb-2 ">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+                        aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="1200">
+                        <img src="static/img/ejercicio1.gif" class="d-block w-100" style="width: 100px; height: 400px;"
+                            alt="Descripción de la imagen" style="width: 50px; height: 600px;">
+
+                        <div class="carousel-caption d-none d-md-block text-white">
+                            <h1>EJERCICIO 1 </h1>
+                            <h2>Ayuda a mejorar la coordinación y el control motor, <br>permitiendo que la persona
+                                ejerza
+                                movimientos precisos con la mano</h2>
+
+                        </div>
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="static/img/ejercicio2.gif" class="d-block w-100" style="width: 100px; height: 400px;"
+                            alt="Descripción de la imagen">
+
+                        <div class="carousel-caption d-none d-md-block text-white">
+                            <h5>Second slide label</h5>
+                            <p>Some representative placeholder content for the second slide.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="static/img/ejercicio3.gif" class="d-block w-100" style="width: 100px; height: 400px;"
+                            alt="Descripción de la imagen">
+
+                        <div class="carousel-caption d-none d-md-block text-white">
+                            <h1>Third slide label</h1>
+                            <p>Some representative placeholder content for the third slide.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div id="contenido2" class="contenido" style="display: none;">
+        <h2>Lista de pacientes</h2>
+
+        <table class="table table-striped" id="miTabla1">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Cedula de Identidad</th>
+                    <th>Fecha de Nacimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr class="fila-paciente" data-cedula="{{ paciente.cedulapac }}">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ paciente.nombres }}</td>
+                    <td>{{ paciente.apellidos }}</td>
+                    <td>{{ paciente.cedulapac }}</td>
+                    <td>{{ paciente.fechanacpc }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <script>
+            $(document).ready(function () {
+                $('#miTabla1').DataTable({
+                    "paging": true, // Habilita la paginación
+                    "pageLength": 10, // Establece la cantidad de registros por página
+                    "pagingType": "full_numbers"
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('.fila-paciente').click(function () {
+                    // Obtener la cédula del paciente de la fila clicada
+                    var cedulaPaciente = $(this).data('cedula');
+
+                    // Verificar si la cédula está definida
+                    if (cedulaPaciente !== undefined) {
+                        // Enviar a la función accesopac
+                        window.location.href = '/accesopac?cedulapac=' + cedulaPaciente;
+                    } else {
+                        console.error("La cédula del paciente es undefined.");
+                    }
+                });
+            });
+
+        </script>
+
+
+
+
+    </div>
+    <div id="contenido3" class="contenido" style="display: none;">
+        <h1>contenido 3</h1>
+    </div>
+    <script>
+        function mostrarContenido(idContenido) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.contenido').forEach(function (contenido) {
+                contenido.style.display = 'none';  // Oculta todos los contenidos
+            });
+
+            // Mostrar el contenido correspondiente al botón clickeado
+            document.getElementById(idContenido).style.display = 'block';  // Muestra el contenido clickeado
+        }
+        function cerrarMensaje(button) {
+            button.parentElement.style.display = 'none';
+        }
+    </script>
+
 
 </body>
 

@@ -30,6 +30,13 @@
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="mostrarContenido('contenido3')">pagina 3</a>
             </li>
+            <button onclick="goBack()">Volver</button>
+            <script>
+                function goBack() {
+                    // Utiliza el objeto history para ir a la pantalla anterior
+                    window.history.back();
+                }
+            </script>
             <li class="nav-item">
                 <a class="dropdown-item menuperfil cerrar" href="/logout">
                     <i class="fas fa-sign-out-alt m-1"></i>Salir
@@ -37,12 +44,12 @@
             </li>
         </ul>
         <div id="contenido1">
-          
-            <form class="d-flex"  action="/plantillajuegos" method="post">
+
+            <form class="d-flex" action="/plantillajuegos" method="post">
                 <button class="btn btn-outline-secondary" type="submit">EMPIEZA A JUGAR</button>
             </form>
-          
-         
+
+
         </div>
         <div id="contenido2" style="display:none;">
             <table class="table">

@@ -48,18 +48,13 @@
     </nav>
 
     <ul class="nav nav-tabs">
-
-
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#" onclick="mostrarContenido('contenido1')">INICIO</a>
-
         </li>
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#" onclick="mostrarContenido('contenido0')">LISTA DE
                 OPERADORES</a>
-
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="mostrarContenido('contenido2')">LISTA DE PACIENTES</a>
         </li>
@@ -167,11 +162,11 @@
                             </div>
 
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion('{{ operador.id }}')">
+                                onclick="confirmarEliminacion1('{{ operador.id }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion(userId) {
+                                function confirmarEliminacion1(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
@@ -382,11 +377,11 @@
 
                                 <td>
                                     <a href="#" class="btn btn-danger btn-delete"
-                                        onclick="confirmarEliminacion('{{ errores.id_error }}')">
+                                        onclick="confirmarEliminacion2('{{ errores.id_error }}')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     <script>
-                                        function confirmarEliminacion(userId) {
+                                        function confirmarEliminacion2(userId) {
                                             // Mostrar una ventana de confirmación
                                             var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
@@ -496,11 +491,11 @@
                                 </div>
                             </div>
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion('{{ paciente.id_paciente }}')">
+                                onclick="confirmarEliminacion3('{{ paciente.id_paciente }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion(userId) {
+                                function confirmarEliminacion3(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
@@ -558,11 +553,11 @@
 
                         <td>
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion('{{ tratamientos.id_tratamiento }}')">
+                                onclick="confirmarEliminacion4('{{ tratamientos.id_tratamiento }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion(userId) {
+                                function confirmarEliminacion4(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
@@ -619,11 +614,11 @@
 
                         <td>
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion2('{{ tratamientos2.id_tratamiento2 }}')">
+                                onclick="confirmarEliminacion5('{{ tratamientos2.id_tratamiento2 }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion2(userId) {
+                                function confirmarEliminacion5(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
@@ -683,11 +678,11 @@
 
 
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion3('{{ tratamientos3.id_tratamiento3 }}')">
+                                onclick="confirmarEliminacion6('{{ tratamientos3.id_tratamiento3 }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion3(userId) {
+                                function confirmarEliminacion6(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 

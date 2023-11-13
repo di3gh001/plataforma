@@ -438,10 +438,12 @@ def page_not_found(e):
 
 @app.route('/usuario')
 def usuario():
-    if 'logueado' in session and session['id_rol'] == 2 and session['id']:
+    if 'logueado' in session and session['id_rol'] == 2 and session.get('id'):
         pacientes = LISTAPAC()
         return render_template('usuario.html', pacientes=pacientes)
-    return render_template('index.html')
+    else:
+        flash('Debes iniciar sesión como usuario con el rol correcto', 'danger')
+        return redirect(url_for('acceso-login'))
 
 
 @app.errorhandler(Exception)
@@ -488,19 +490,18 @@ def agregarpac():
     return redirect(url_for('usuario'))
 
 
-@app.route('/accesopac', methods=["POST", "GET"])
+@app.route('/accesopac', methods=["GET"])
 def accesopac():
     if 'logueado' in session and session['logueado']:
-        if request.method == 'POST':
-            cedulapac = request.form['txtcedulapac']
-            cur = mysql.connection.cursor()
-            cur.execute(
-                "SELECT * FROM paciente WHERE cedulapac = %s", (cedulapac,))
+        # Recupera la cédula del paciente del parámetro de consulta
+        cedulapac = request.args.get('cedulapac')
 
-            paciente = cur.fetchone()
-            cur.close()
-            if paciente is not None:
+        if cedulapac:
+            # Si la cédula está definida, autentica al paciente
+            paciente = autenticar_paciente_cedula(cedulapac)
 
+            if paciente:
+                # Si el paciente existe en la base de datos
                 session['id_paciente'] = paciente['id_paciente']
                 session['nombrepac'] = paciente['nombres']
                 session['apellidopac'] = paciente['apellidos']
@@ -510,13 +511,23 @@ def accesopac():
 
                 return redirect(url_for('paciente'))
             else:
-
                 flash('El paciente no existe', 'danger')
                 return redirect(url_for('usuario'))
+        else:
+            flash('Cédula del paciente no proporcionada', 'danger')
+            return redirect(url_for('algun_otro_ruteo'))
     else:
         flash('Debes estar logueado para acceder a un paciente', 'danger')
         return redirect(url_for('acceso-login'))
 
+
+def autenticar_paciente_cedula(cedulapac):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM paciente WHERE cedulapac = %s", (cedulapac,))
+    paciente = cur.fetchone()
+    cur.close()
+
+    return paciente
  # ------------------------------------------------------------------------PACIENTE--------------------------
 
 
