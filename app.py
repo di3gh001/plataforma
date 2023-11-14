@@ -546,7 +546,7 @@ def paciente():
 
 @app.route('/usuario')
 def usuario():
-    if 'logueado' in session and 'id' in session['id_rol'] == 2:
+    if 'logueado' in session and session['id_rol'] == 1:
         id_operador = session['id']
         cur = mysql.connection.cursor()
         cur.execute(
