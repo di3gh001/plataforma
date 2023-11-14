@@ -18,12 +18,12 @@ app.config['MYSQL_DB'] = 'Di3gh003$plataforma'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 #
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = ''
-#app.config['MYSQL_DB'] = 'plataforma'
-#app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-#mysql = MySQL(app)
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_DB'] = 'plataforma'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# mysql = MySQL(app)
 
 
 @app.route('/')
@@ -368,6 +368,7 @@ def borraroperador(id):
     flash('Contacto Eliminado')
     return redirect(url_for('listar'))
 
+
 @app.route('/borrarerror/<string:id_error>')
 def borrarerror(id_error):
     cur = mysql.connection.cursor()
@@ -375,6 +376,7 @@ def borrarerror(id_error):
     mysql.connection.commit()
     flash('error Eliminado')
     return redirect(url_for('tecnico'))
+
 
 @app.route('/borraroperadortec/<string:id>')
 def borraroperadortec(id):
@@ -546,7 +548,7 @@ def paciente():
 
 @app.route('/usuario')
 def usuario():
-    if 'logueado' in session and session['id_rol'] == 1:
+    if 'logueado' in session and session['id_rol'] == 2:
         id_operador = session['id']
         cur = mysql.connection.cursor()
         cur.execute(
