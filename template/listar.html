@@ -67,7 +67,7 @@
 
             <main class="main col">
                 <div class="row justify-content-center align-content-center text-center">
-                    <input type="text" id="buscador" placeholder="Buscar en la tabla">
+
                     <form action="{{url_for('buscarusuario')}}" method="post" class="buscar-form">
                         <label for="nombre" class="buscar-label">BUSQUEDA:</label>
                         <div class="input-group">
@@ -190,15 +190,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <script>
-                            $(document).ready(function () {
-                                $('#miTabla1').DataTable({
-                                    "paging": true, // Habilita la paginación
-                                    "pageLength": 10, // Establece la cantidad de registros por página
-                                    "pagingType": "full_numbers" // Agrega controles de navegación detallados
-                                });
-                            });
-                        </script>
+
                     </div>
                 </div>
             </main>

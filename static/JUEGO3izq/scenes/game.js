@@ -20,7 +20,7 @@ export class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'static/img/fondo1.jpg');
+        this.load.image('background', 'static/img/Nivel3fondo.png');
         this.load.image('dona', 'static/img/mosquito.png');
         this.load.image('caja', 'static/img/equals.png');
         this.load.image('piso', 'static/img/mesabien.png');
@@ -28,7 +28,8 @@ export class Game extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo = this.add.image(game.config.width / 2, game.config.height / 2, 'background');
+        this.fondo.setScale(2.5, 2);
         this.plataforma = this.physics.add.image(650, 500, 'piso').setImmovable();
         this.plataforma.body.allowGravity = false;
         this.plataforma.setScale(1, 0.5);
@@ -54,7 +55,7 @@ export class Game extends Phaser.Scene {
         if (!this.hayCajasEnPantalla()) {
             this.final();
         }
-        
+
         this.textoTiempo = this.add.text(game.config.width - 300, 16, 'Tiempo: ' + this.tiempo.minutos + ':' + this.tiempo.segundos, { fontSize: '24px', fill: '#fff' });
 
         this.time.addEvent({

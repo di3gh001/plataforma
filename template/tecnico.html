@@ -15,6 +15,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+
     <style>
         .contenido {
             display: none;
@@ -361,6 +363,7 @@
                                 <th>N°</th>
                                 <th>Ruta</th>
                                 <th>Mensaje</th>
+                                <th>Fecha y Hora</th>
 
 
                                 <th>
@@ -375,6 +378,7 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ errores.ruta }}</td>
                                 <td>{{ errores.mensaje }}</td>
+                                <td>{{ errores.hora }}</td>
 
 
                                 <td>
@@ -538,7 +542,7 @@
         <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
             <h2>Lista de pacientes</h2>
 
-            <table class="table table-striped" id="miTabla3">
+            <table class="table table-striped" id="miTabla8">
                 <thead>
                     <tr>
                         <th>N°</th>
@@ -587,7 +591,7 @@
         </div>
         <script>
             $(document).ready(function () {
-                $('#miTabla3').DataTable({
+                $('#miTabla8').DataTable({
                     "paging": true, // Habilita la paginación
                     "pageLength": 10, // Establece la cantidad de registros por página
                     "pagingType": "full_numbers"
@@ -599,7 +603,7 @@
         <div id="usuarios" style="display:block;"> <!-- Lista de Usuarios -->
             <h2>Lista de pacientes</h2>
 
-            <table class="table table-striped" id="miTabla4">
+            <table class="table table-striped" id="miTabla9">
                 <thead>
                     <tr>
                         <th>N°</th>
@@ -607,7 +611,6 @@
                         <th>Tiempo para Completar</th>
                         <th>Fecha y hora</th>
                         <th>Mano ejercitada</th>
-                        <th>Paciente</th>
 
                         <th>
                             Operaciones
@@ -625,18 +628,20 @@
                         <td>{{ tratamientos2.mano }}</td>
 
                         <td>
+
+
                             <a href="#" class="btn btn-danger btn-delete"
-                                onclick="confirmarEliminacion5('{{ tratamientos2.id_tratamiento2 }}')">
+                                onclick="confirmarEliminacion6('{{ tratamientos2.id_tratamiento2 }}')">
                                 <i class="bi bi-trash"></i>
                             </a>
                             <script>
-                                function confirmarEliminacion5(userId) {
+                                function confirmarEliminacion6(userId) {
                                     // Mostrar una ventana de confirmación
                                     var confirmacion = confirm("¿Estás seguro de que deseas eliminar este usuario?");
 
                                     // Si el usuario confirma, redirigir a la ruta de eliminación
                                     if (confirmacion) {
-                                        window.location.href = "/borrar_dato2/" + userId;
+                                        window.location.href = "/borrardato2/" + userId;
                                     }
                                 }
                             </script>
@@ -649,7 +654,7 @@
         </div>
         <script>
             $(document).ready(function () {
-                $('#miTabla4').DataTable({
+                $('#miTabla9').DataTable({
                     "paging": true, // Habilita la paginación
                     "pageLength": 10, // Establece la cantidad de registros por página
                     "pagingType": "full_numbers"
