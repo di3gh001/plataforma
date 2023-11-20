@@ -45,6 +45,8 @@ export class Detection {
         this.y19 = -5;
 
         this.videoElement = document.getElementsByClassName('input_video')[0];
+        this.videoElement.style.transform = 'scaleX(-1)';
+
 
         this.cameraGame = new Camera(this.videoElement, {
             onFrame: async () => {
